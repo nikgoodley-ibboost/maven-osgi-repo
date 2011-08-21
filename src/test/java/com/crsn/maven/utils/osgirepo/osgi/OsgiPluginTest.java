@@ -15,7 +15,7 @@ public class OsgiPluginTest {
 	private final OsgiPlugin plugin;
 	
 	public OsgiPluginTest() throws UnsupportedEncodingException {
-		URL resource = this.getClass().getResource("/org.eclipse.xtext.xtend2.lib.source_2.0.1.v201108020636.jar");
+		URL resource = this.getClass().getResource("/org.eclipse.xtext.xtend2.lib_2.0.1.v201108020636.jar");
 		String encodedFileName = resource.getFile();
 		String decodedFileName = URLDecoder.decode(encodedFileName, "UTF-8");
 		this.plugin=new OsgiPlugin(new File(decodedFileName));
@@ -23,7 +23,7 @@ public class OsgiPluginTest {
 
 	@Test
 	public void canGetName() {
-		assertEquals("org.eclipse.xtext.xtend2.lib.source",plugin.getName());
+		assertEquals("org.eclipse.xtext.xtend2.lib",plugin.getName());
 	}
 	
 

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -18,41 +20,27 @@ public class OsgiPlugin {
 	
 	private final String pluginName;
 	private final Version pluginVersion;
+	private final List<OsgiDependency> requiredBundles;
 
 	public OsgiPlugin(File location) {
 		if (location == null) {
 			throw new NullPointerException("Null location.");
 		}
 		this.location = location;
+		
+		
+		
 		try {
 			ZipFile zipFile=new ZipFile(location);
 			
 			InputStream content = zipFile.getInputStream(zipFile.getEntry("META-INF/MANIFEST.MF"));
 			
-			try {
-				
-				HashMap<String, String> headers = new HashMap<String, String>();
-				ManifestElement.parseBundleManifest(content,headers);
-
-				
-				ManifestElement[] elements = ManifestElement.parseHeader("Bundle-SymbolicName", headers.get("Bundle-SymbolicName"));
-				if (elements.length != 1) {
-					throw new IllegalArgumentException("more than one symbolic name");
-				}
-				this.pluginName=elements[0].getValue();
-				
-				
-				
-				this.pluginVersion=new Version(headers.get("Bundle-Version"));
-				
-				
-				
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			} catch (BundleException e) {
-				throw new RuntimeException(e);
-			}
-	
+			BundleParser parser=new BundleParser(content);
+			
+			this.pluginName=parser.getPluginName();
+			this.pluginVersion=parser.getPluginVersion();
+			this.requiredBundles=parser.getRequiredBundles();
+			
 			
 		} catch (ZipException e) {
 			throw new RuntimeException(e);
@@ -74,5 +62,8 @@ public class OsgiPlugin {
 		return location;
 	}
 	
+	public List<OsgiDependency> getRequiredBundles() {
+		return requiredBundles;
+	}
 
 }
