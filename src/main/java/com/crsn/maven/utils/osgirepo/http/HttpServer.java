@@ -3,8 +3,10 @@ package com.crsn.maven.utils.osgirepo.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.simpleframework.http.Path;
@@ -41,8 +43,12 @@ public class HttpServer implements Container {
 
 	public String getServerUrl() {
 		checkState(State.RUNNING);
-		return String.format("http://%s:%d/", listeningOn.getHostName(),
-				listeningOn.getPort());
+		try {
+			return String.format("http://%s:%d/", InetAddress.getLocalHost().getHostName(),
+					listeningOn.getPort());
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 
