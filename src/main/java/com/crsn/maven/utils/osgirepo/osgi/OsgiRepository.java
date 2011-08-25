@@ -2,6 +2,7 @@ package com.crsn.maven.utils.osgirepo.osgi;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class OsgiRepository {
 			plugins.add(osgiPlugin);
 		}
 		
+	}
+	
+	public List<OsgiPlugin> getPlugins() {
+		return Collections.unmodifiableList(plugins);
 	}
 
 }

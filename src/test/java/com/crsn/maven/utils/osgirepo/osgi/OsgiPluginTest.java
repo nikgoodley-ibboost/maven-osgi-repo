@@ -11,24 +11,18 @@ import org.osgi.framework.Version;
 import com.crsn.maven.utils.osgirepo.util.TestUtil;
 
 public class OsgiPluginTest {
-	
-	private final OsgiPlugin plugin;
-	
-	public OsgiPluginTest() throws UnsupportedEncodingException {
-		File location = TestUtil.getFileOfResource("org.eclipse.xtext.xtend2.lib_2.0.1.v201108020636.jar");
-		this.plugin=new OsgiPlugin(location);
-	}
+
+	private final OsgiPlugin plugin = new OsgiPlugin(
+			TestUtil.getFileOfResource("mockrepo/org.eclipse.xtext.xtend2.lib_2.0.1.v201108020636.jar"));;
 
 	@Test
 	public void canGetName() {
-		assertEquals("org.eclipse.xtext.xtend2.lib",plugin.getName());
+		assertEquals("org.eclipse.xtext.xtend2.lib", plugin.getName());
 	}
-	
 
 	@Test
 	public void canGetVersion() {
-		assertEquals(new Version(2, 0, 1,"v201108020636"),plugin.getVersion());
+		assertEquals(new Version(2, 0, 1, "v201108020636"), plugin.getVersion());
 	}
-
 
 }

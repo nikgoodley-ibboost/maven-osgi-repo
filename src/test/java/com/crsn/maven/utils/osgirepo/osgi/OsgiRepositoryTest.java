@@ -1,19 +1,18 @@
 package com.crsn.maven.utils.osgirepo.osgi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
-import java.io.File;
-
-import org.junit.Ignore;
 import org.junit.Test;
+
+import com.crsn.maven.utils.osgirepo.util.TestUtil;
 
 public class OsgiRepositoryTest {
 
-	@Ignore
+	
 	@Test
 	public void canLoadRepository() {
-		OsgiRepository repo=new OsgiRepository(new File("/Applications/eclipse-indigo/plugins/"));
-		
+		OsgiRepository repo=new OsgiRepository(TestUtil.getFileOfResource("mockrepo"));
+		assertFalse(repo.getPlugins().isEmpty());
 	}
 
 }

@@ -1,15 +1,11 @@
 package com.crsn.maven.utils.osgirepo.maven;
 
 public class MavenVersion {
-	
+
 	private final String versionName;
 
 	public MavenVersion(String versionName) {
 		this.versionName = versionName;
-	}
-	
-	public String getVersionName() {
-		return versionName;
 	}
 
 	@Override
@@ -42,7 +38,5 @@ public class MavenVersion {
 			return false;
 		return true;
 	}
-	
-	
 
 }

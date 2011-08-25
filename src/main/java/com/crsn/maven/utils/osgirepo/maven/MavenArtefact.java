@@ -26,7 +26,7 @@ public class MavenArtefact {
 		}
 		this.version = version;
 
-		if (this.content == null) {
+		if (content == null) {
 			throw new NullPointerException("Null content.");
 		}
 		this.content = content;

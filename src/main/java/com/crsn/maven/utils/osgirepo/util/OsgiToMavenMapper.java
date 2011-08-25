@@ -7,12 +7,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
+import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 
 public class OsgiToMavenMapper {
 
-	public static MavenRepository createRepository(List<OsgiPlugin> plugins) {
+	public static MavenRepository createRepository(OsgiRepository repository) {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
-		for (OsgiPlugin plugin : plugins) {
+		for (OsgiPlugin plugin : repository.getPlugins()) {
 			String groupId = createGroupId(plugin);
 
 			String artifactId = createArtifactName(plugin);
