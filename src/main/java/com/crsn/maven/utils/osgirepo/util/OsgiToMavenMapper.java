@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.osgi.framework.Version;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
+import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 
@@ -18,9 +20,9 @@ public class OsgiToMavenMapper {
 
 			String artifactId = createArtifactName(plugin);
 
-			String version = plugin.getVersion().toString();
+			Version version = plugin.getVersion();
 
-			builder.addArtefact(groupId, version, artifactId,
+			builder.addArtefact(groupId, new MavenVersion(version.getMajor(), version.getMinor(), version.getMicro()), artifactId,
 					plugin.getLocation());
 
 		}

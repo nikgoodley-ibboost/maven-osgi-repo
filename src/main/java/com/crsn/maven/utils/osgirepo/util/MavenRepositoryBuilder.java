@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.osgi.framework.Version;
+
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
 import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
@@ -18,8 +20,8 @@ class MavenRepositoryBuilder {
 	}
 	
 	
-	public void addArtefact(String groupId, String versionId , String artefactId, File content) {
-		MavenArtefact artefact=new MavenArtefact(new MavenGroup(groupId), artefactId, new MavenVersion(versionId), content);
+	public void addArtefact(String groupId, MavenVersion version , String artefactId, File content) {
+		MavenArtefact artefact=new MavenArtefact(new MavenGroup(groupId), artefactId, version, content);
 		artefacts.add(artefact);
 	}
 	

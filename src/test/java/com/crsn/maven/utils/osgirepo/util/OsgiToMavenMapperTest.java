@@ -45,6 +45,6 @@ public class OsgiToMavenMapperTest {
 		List<MavenArtefact> artefacts = mavenRepository.getArtefacts();
 		assertFalse(artefacts.isEmpty());
 		MavenArtefact artefact = artefacts.get(0);
-		assertEquals(new MavenVersion("2.0.1.v201108020636"), artefact.getVersion());
+		assertEquals(new MavenVersion(2,0,1), artefact.getVersion());
 	}
 }

@@ -35,7 +35,7 @@ public class PomFileContentTest {
 	@Test
 	public void canMarshalPomFile() throws IOException, SAXException {
 		MavenArtefact artefact = new MavenArtefact(new MavenGroup("com.crsn"),
-				"boo", new MavenVersion("1.0"), new File("."));
+				"boo", new MavenVersion(1,0), new File("."));
 		PomFileContent content = new PomFileContent(artefact);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		content.serializeContent(bos);
