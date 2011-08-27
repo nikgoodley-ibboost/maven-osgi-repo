@@ -34,8 +34,30 @@ public class MavenVersionRange {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		
+		
+		if (fromVersion != null && fromVersion.equals(toVersion)) {
+			return fromVersion.toString();
+		}
+		
+		StringBuilder result=new StringBuilder();
+		result.append(includingForm ? "[" : "(");
+		
+		if (fromVersion != null) {
+			result.append(fromVersion);
+		}
+		
+		result.append(",");
+		
+		if (toVersion != null) {
+			result.append(toVersion);
+		}
+		
+		result.append(includingTo ? "]" : ")");
+		
+		
+		return result.toString();
 	}
+	
 
 }
