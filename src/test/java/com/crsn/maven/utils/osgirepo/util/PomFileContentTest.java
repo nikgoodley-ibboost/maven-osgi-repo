@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Collections;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLAssert;
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import static org.custommonkey.xmlunit.XMLAssert.*;
@@ -35,7 +37,7 @@ public class PomFileContentTest {
 	@Test
 	public void canMarshalPomFile() throws IOException, SAXException {
 		MavenArtefact artefact = new MavenArtefact(new MavenGroup("com.crsn"),
-				"boo", new MavenVersion(1,0), new File("."));
+				"boo", new MavenVersion(1,0), Collections.<MavenDependency>emptyList(), new File("."));
 		PomFileContent content = new PomFileContent(artefact);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		content.serializeContent(bos);

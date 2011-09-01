@@ -43,6 +43,14 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.google.code.cli-parser</groupId>
+			<artifactId>cli</artifactId>
+			<version>7</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>xmlunit</groupId>
