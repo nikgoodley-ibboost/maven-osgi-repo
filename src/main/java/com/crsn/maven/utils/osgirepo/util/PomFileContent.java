@@ -2,6 +2,7 @@ package com.crsn.maven.utils.osgirepo.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -10,7 +11,10 @@ import javax.xml.bind.Marshaller;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
+import com.crsn.maven.utils.pom.Dependency;
 import com.crsn.maven.utils.pom.Model;
+import com.crsn.maven.utils.pom.Model.Dependencies;
 import com.crsn.maven.utils.pom.ObjectFactory;
 
 public class PomFileContent implements Content {
@@ -26,6 +30,26 @@ public class PomFileContent implements Content {
 		pomModel.setArtifactId(artefact.getName());
 		pomModel.setGroupId(artefact.getGroup().toString());
 		pomModel.setVersion(artefact.getVersion().toString());
+		
+		List<MavenDependency> dependencies = artefact.getDependencies();
+		if (!dependencies.isEmpty()) {
+			Dependencies dependenciesModel = factory.createModelDependencies();
+					
+					
+			List<Dependency> dependencyList = dependenciesModel.getDependency();
+			
+			for (MavenDependency dependency : dependencies) {
+				Dependency dependencyModlel = factory.createDependency();
+				dependencyModlel.setArtifactId(dependency.getArtefactId());
+				dependencyModlel.setGroupId(dependency.getGroup().toString());
+				dependencyModlel.setVersion(dependency.getVersionRange().toString());
+				dependencyList.add(dependencyModlel);
+				
+			}
+			
+			pomModel.setDependencies(dependenciesModel);
+		}
+		
 	}
 
 	@Override
