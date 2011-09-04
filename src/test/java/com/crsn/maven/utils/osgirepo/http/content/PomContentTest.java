@@ -1,4 +1,4 @@
-package com.crsn.maven.utils.osgirepo.util;
+package com.crsn.maven.utils.osgirepo.http.content;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.crsn.maven.utils.osgirepo.http.content.PomContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
@@ -26,7 +27,7 @@ import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtefactBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
 
-public class PomFileContentTest {
+public class PomContentTest {
 
 	@Before
 	public void setUpXmlUnit() {
@@ -41,7 +42,7 @@ public class PomFileContentTest {
 		MavenArtefact artefact = new MavenArtefact(new MavenGroup("com.crsn"),
 				"boo", new MavenVersion(1, 0),
 				Collections.<MavenDependency> emptyList(), new File("."));
-		PomFileContent content = new PomFileContent(artefact);
+		PomContent content = new PomContent(artefact);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		content.serializeContent(bos);
 
@@ -83,7 +84,7 @@ public class PomFileContentTest {
 
 		MavenArtefact artefact = artefacts.get(0);
 
-		PomFileContent content = new PomFileContent(artefact);
+		PomContent content = new PomContent(artefact);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		content.serializeContent(bos);
 

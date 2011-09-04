@@ -1,4 +1,4 @@
-package com.crsn.maven.utils.osgirepo.util;
+package com.crsn.maven.utils.osgirepo.http.content;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,12 +17,12 @@ import com.crsn.maven.utils.pom.Model;
 import com.crsn.maven.utils.pom.Model.Dependencies;
 import com.crsn.maven.utils.pom.ObjectFactory;
 
-public class PomFileContent implements Content {
+public class PomContent implements Content {
 
 	private final Model pomModel;
 	private JAXBElement<Model> project;
 
-	public PomFileContent(MavenArtefact artefact) {
+	public PomContent(MavenArtefact artefact) {
 		ObjectFactory factory = new ObjectFactory();
 		this.pomModel = factory.createModel();
 		project = factory.createProject(pomModel);
