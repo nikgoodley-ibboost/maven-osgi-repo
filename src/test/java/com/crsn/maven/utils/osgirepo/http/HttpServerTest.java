@@ -31,13 +31,6 @@ public class HttpServerTest {
 		server.stop();
 	}
 	
-	@Test
-	public void canProcessQueries() throws InterruptedException {
-		HttpServer server=new HttpServer(31337);
-		server.start();
-		Thread.sleep(200000);
-		server.stop();
-	}
 
 	@Test
 	public void willAnswerWith404ToNotExistingPage()
