@@ -139,7 +139,7 @@ public class MavenRepositoryBuilder {
 
 			@Override
 			public void build() {
-				dependencies.add(new MavenDependency(group, artefactId,
+				dependencies.add(new MavenDependency(new MavenGroup(groupId), artefactId,
 						versionRange));
 
 			}

@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
@@ -24,7 +25,7 @@ public class OsgiToMavenMapperTest {
 	@Test
 	public void canMapArtifactName() {
 
-		String artifactName = OsgiToMavenMapper.createArtifactName(osgiPlugin);
+		String artifactName = OsgiToMavenMapper.createArtifactName(osgiPlugin.getName());
 		assertEquals("lib", artifactName);
 
 	}
@@ -32,7 +33,7 @@ public class OsgiToMavenMapperTest {
 	@Test
 	public void canMapArtifactGroup() {
 
-		String groupId = OsgiToMavenMapper.createGroupId(osgiPlugin);
+		String groupId = OsgiToMavenMapper.createGroupId(osgiPlugin.getName());
 		assertEquals("org.eclipse.xtext.xtend2", groupId);
 
 	}
@@ -46,5 +47,10 @@ public class OsgiToMavenMapperTest {
 		assertFalse(artefacts.isEmpty());
 		MavenArtefact artefact = artefacts.get(0);
 		assertEquals(new MavenVersion(2,0,1), artefact.getVersion());
+		List<MavenDependency> dependencies = artefact.getDependencies();
+		assertFalse(dependencies.isEmpty());
+		MavenDependency firstDependency = dependencies.get(0);
+		assertEquals("lib",firstDependency.getArtefactId());
+		assertEquals("org.eclipse.xtext.xbase",firstDependency.getGroup().toString());
 	}
 }

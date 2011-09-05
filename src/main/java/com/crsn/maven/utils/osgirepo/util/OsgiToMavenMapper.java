@@ -9,27 +9,47 @@ import org.osgi.framework.Version;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtefactBuilder;
+import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
+import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
+import com.crsn.maven.utils.osgirepo.osgi.VersionRange;
 
 public class OsgiToMavenMapper {
 
 	public static MavenRepository createRepository(OsgiRepository repository) {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
 		for (OsgiPlugin plugin : repository.getPlugins()) {
-			String groupId = createGroupId(plugin);
+			String groupId = createGroupId(plugin.getName());
 
-			String artifactId = createArtifactName(plugin);
+			String artifactId = createArtifactName(plugin.getName());
 
 			Version version = plugin.getVersion();
 
 			MavenArtefactBuilder artefactBuilder = builder.addArtefact();
 			artefactBuilder.setGroup(groupId);
 			artefactBuilder.setArtefactId(artifactId);
-			artefactBuilder.setVersion(new MavenVersion(version.getMajor(),
-					version.getMinor(), version.getMicro()));
+			artefactBuilder.setVersion(createMavenVersion(version));
 			artefactBuilder.setContent(plugin.getLocation());
+
+			for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
+				MavenDependencyBuilder dependencyBuilder = artefactBuilder
+						.addDependency();
+				dependencyBuilder.setArtefactId(createArtifactName(osgiDependency.getName()));
+				dependencyBuilder.setGroupId(createGroupId(osgiDependency
+						.getName()));
+
+				VersionRange versionRange = osgiDependency.getVersionRange();
+
+				dependencyBuilder.setVersionRange(
+						createMavenVersion(versionRange.getFrom()),
+						versionRange.isIncludingFrom(),
+						createMavenVersion(versionRange.getTo()),
+						versionRange.isIncludingTo());
+				dependencyBuilder.build();
+			}
+
 			artefactBuilder.build();
 
 		}
@@ -38,26 +58,32 @@ public class OsgiToMavenMapper {
 
 	}
 
-	static String createGroupId(OsgiPlugin plugin) {
-		List<String> parts = splitPluginName(plugin);
+	private static MavenVersion createMavenVersion(Version version) {
+		if (version == null) {
+			return null;
+		}
+		return new MavenVersion(version.getMajor(), version.getMinor(),
+				version.getMicro());
+	}
+
+	static String createGroupId(String pluginName) {
+		// String pluginName = plugin.getName();
+
+		List<String> parts1 = Arrays.asList(pluginName.split("\\."));
+		List<String> parts = parts1;
 
 		String groupId = StringUtils.join(parts.subList(0, parts.size() - 1),
 				'.');
 		return groupId;
 	}
 
-	static String createArtifactName(OsgiPlugin plugin) {
-		List<String> groupParts = splitPluginName(plugin);
-
-		return groupParts.get(groupParts.size() - 1);
-	}
-
-	private static List<String> splitPluginName(OsgiPlugin plugin) {
-		String pluginName = plugin.getName();
+	static String createArtifactName(String pluginName) {
+//		String pluginName = plugin.getName();
 
 		List<String> parts = Arrays.asList(pluginName.split("\\."));
+		List<String> groupParts = parts;
 
-		return parts;
+		return groupParts.get(groupParts.size() - 1);
 	}
 
 }
