@@ -23,9 +23,6 @@ import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
-import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtefactBuilder;
-import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
-import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
 
 public class PomContentTest {
 
@@ -63,22 +60,7 @@ public class PomContentTest {
 	@Test
 	public void canMarshalPomFileWithDependencies() throws IOException,
 			SAXException {
-		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
-		MavenArtefactBuilder artefactBuilder = builder.addArtefact();
-		artefactBuilder.setArtefactId("boo");
-		artefactBuilder.setGroup("com.crsn");
-		artefactBuilder.setVersion(new MavenVersion(1, 0));
-		artefactBuilder.setContent(new File("."));
-		MavenDependencyBuilder dependencyBuilder = artefactBuilder
-				.addDependency();
-		dependencyBuilder.setArtefactId("dependency");
-		dependencyBuilder.setGroupId("com.crsn");
-		dependencyBuilder.setVersionRange(new MavenVersion(1, 0), true, null,
-				false);
-		dependencyBuilder.build();
-		artefactBuilder.build();
-
-		MavenRepository repository = builder.build();
+		MavenRepository repository = ContentTestUtil.createMockMavenRepository();
 
 		List<MavenArtefact> artefacts = repository.getArtefacts();
 

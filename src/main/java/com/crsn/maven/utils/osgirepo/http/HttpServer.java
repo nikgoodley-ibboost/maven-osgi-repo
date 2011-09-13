@@ -94,6 +94,8 @@ public class HttpServer implements Container {
 		if (content == null) {
 			throw new NullPointerException("Null content.");
 		}
+		
+		System.out.printf("Registered %s%n", path);
 		contents.put(path, content);
 	}
 

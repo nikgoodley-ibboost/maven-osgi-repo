@@ -23,23 +23,21 @@ public class Main {
 			return;
 		}
 		
+		
 		main.execute();
 
 	}
 	
 	
 	private void execute() {
-		HttpServer server=new HttpServer(port);
-		OsgiRepository osgiRepository=new OsgiRepository(pluginRepository);
-		MavenRepository mavenRepository = OsgiToMavenMapper.createRepository(osgiRepository);
-		MavenRepositoryToHttpContentsMapper.registerArtefacts(mavenRepository, server);
-		server.start();
+		MavenOsgiRepository repository=new MavenOsgiRepository(pluginRepository, port);		
+		repository.start();
 		try {
 			Thread.sleep(Long.MAX_VALUE);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		} finally {
-			server.stop();
+			repository.stop();
 		}
 	}
 

@@ -17,6 +17,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.crsn.maven.utils.osgirepo.util.HttpResponseWrapper;
+
 public class HttpServerTest {
 
 	private final HttpServer server = new HttpServer();

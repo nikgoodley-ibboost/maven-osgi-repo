@@ -1,4 +1,4 @@
-package com.crsn.maven.utils.osgirepo.http;
+package com.crsn.maven.utils.osgirepo.util;
 
 import java.io.IOException;
 import java.io.InputStream;
