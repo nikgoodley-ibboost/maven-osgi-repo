@@ -6,29 +6,31 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.Arrays;
 
-import javax.crypto.Mac;
-import javax.xml.crypto.dsig.spec.HMACParameterSpec;
-
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.output.NullOutputStream;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
 
 public class DigestContent implements Content {
 
-	private final byte[] asciiEncodedMac;
-	
+	private volatile byte[] asciiEncodedMac;
+	private final String type;
+	private final Content originalContent;
+
 	public DigestContent(String type, Content originalContent) {
+		this.type = type;
+		this.originalContent = originalContent;
 		if (type == null) {
 			throw new NullPointerException("Null type");
 		}
 		if (originalContent == null) {
 			throw new NullPointerException("Null original content.");
 		}
-		
+
+		this.asciiEncodedMac = null;
+	}
+
+	private void calculateMac() {
 		MacOutputStream macStream = new MacOutputStream(type);
 		try {
 			originalContent.serializeContent(macStream);
@@ -36,16 +38,17 @@ public class DigestContent implements Content {
 			throw new RuntimeException(e);
 		}
 		try {
-			this.asciiEncodedMac=toHexString(macStream.getMac()).getBytes("ASCII");
+			this.asciiEncodedMac = toHexString(macStream.getMac()).getBytes(
+					"ASCII");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	private String toHexString(byte[] mac) {
-		StringBuilder builder=new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		for (byte b : mac) {
-			builder.append(String.format("%x",b));
+			builder.append(String.format("%x", b));
 		}
 		return builder.toString();
 	}
@@ -57,14 +60,22 @@ public class DigestContent implements Content {
 
 	@Override
 	public long contentLength() {
+		calculateIfNeeded();
 		return asciiEncodedMac.length;
 	}
 
 	@Override
 	public void serializeContent(OutputStream stream) throws IOException {
+		calculateIfNeeded();
 		stream.write(asciiEncodedMac);
 	}
-	
+
+	private synchronized void calculateIfNeeded() {
+		if (this.asciiEncodedMac == null) {
+			calculateMac();
+		}
+	}
+
 	private class MacOutputStream extends FilterOutputStream {
 
 		private final MessageDigest digest;
@@ -73,17 +84,17 @@ public class DigestContent implements Content {
 			super(new NullOutputStream());
 			try {
 				this.digest = MessageDigest.getInstance(macType);
-//				DigestUtils.md5Hex(data)
+				// DigestUtils.md5Hex(data)
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalArgumentException(e);
-			} 
+			}
 		}
 
 		@Override
 		public void write(int b) throws IOException {
 			digest.update((byte) b);
 		}
-		
+
 		public byte[] getMac() {
 			return digest.digest();
 		}
