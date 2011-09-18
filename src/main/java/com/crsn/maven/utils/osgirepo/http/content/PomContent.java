@@ -33,7 +33,7 @@ public class PomContent implements Content {
 		
 		//project = factory.createProject(pomModel);
 		pomModel.setModelVersion("4.0.0");
-		pomModel.setArtifactId(artefact.getId());
+		pomModel.setArtifactId(artefact.getArtifactId());
 		pomModel.setGroupId(artefact.getGroup().toString());
 		pomModel.setVersion(artefact.getVersion().toString());
 

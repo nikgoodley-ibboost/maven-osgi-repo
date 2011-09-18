@@ -14,12 +14,12 @@ public class MavenRepositoryToHttpContentsMapper {
 
 	public static void registerArtefacts(MavenRepository repository,
 			HttpServer server) {
-		List<MavenArtifact> artefacts = repository.getArtefacts();
+		List<MavenArtifact> artefacts = repository.getArtifacts();
 		for (MavenArtifact mavenArtefact : artefacts) {
 
 			String directory = String.format("/%s/%s/%s", mavenArtefact
 					.getGroup().toString().replaceAll("\\.", "/"),
-					mavenArtefact.getId(), mavenArtefact.getVersion()
+					mavenArtefact.getArtifactId(), mavenArtefact.getVersion()
 							.toString());
 
 			PomContent pomContent = new PomContent(mavenArtefact);
@@ -38,7 +38,7 @@ public class MavenRepositoryToHttpContentsMapper {
 			MavenArtifact mavenArtefact, HttpServer server, String directory,
 			String extension) {
 		String contentUrl = String.format("%s/%s-%s.%s", directory,
-				mavenArtefact.getId(), mavenArtefact.getVersion(), extension);
+				mavenArtefact.getArtifactId(), mavenArtefact.getVersion(), extension);
 		server.registerContent(contentUrl, content);
 
 		registerMacForContent(content, server, contentUrl, "MD5");

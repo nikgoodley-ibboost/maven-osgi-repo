@@ -16,24 +16,24 @@ public class MavenRepositoryBuilderTest {
 	public void canBuildArtefacts() {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
 
-		MavenArtifactBuilder artefact = builder.addArtefact();
+		MavenArtifactBuilder artefact = builder.addArtifact();
 		artefact.setArtifactId("id");
 		artefact.setGroup("group");
 		artefact.setVersion(new MavenVersion(1, 0));
 		artefact.setContent(new File("."));
 		artefact.build();
 
-		List<MavenArtifact> artefacts = builder.build().getArtefacts();
+		List<MavenArtifact> artefacts = builder.build().getArtifacts();
 		assertFalse(artefacts.isEmpty());
 		MavenArtifact first = artefacts.get(0);
-		assertEquals("id", first.getId());
+		assertEquals("id", first.getArtifactId());
 	}
 	
 	@Test
 	public void canBuildDependency() {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
 
-		MavenArtifactBuilder artefact = builder.addArtefact();
+		MavenArtifactBuilder artefact = builder.addArtifact();
 		artefact.setArtifactId("id");
 		artefact.setGroup("group");
 		artefact.setVersion(new MavenVersion(1, 0));
@@ -45,10 +45,10 @@ public class MavenRepositoryBuilderTest {
 		dependency.build();
 		artefact.build();
 
-		List<MavenArtifact> artefacts = builder.build().getArtefacts();
+		List<MavenArtifact> artefacts = builder.build().getArtifacts();
 		assertFalse(artefacts.isEmpty());
 		MavenArtifact first = artefacts.get(0);
-		assertEquals("id", first.getId());
+		assertEquals("id", first.getArtifactId());
 		assertFalse(first.getDependencies().isEmpty());
 		
 	}

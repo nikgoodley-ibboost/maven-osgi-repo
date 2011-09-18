@@ -47,7 +47,7 @@ public class MavenArtifact {
 		return group;
 	}
 
-	public String getId() {
+	public String getArtifactId() {
 		return id;
 	}
 

@@ -27,7 +27,7 @@ public class OsgiToMavenMapper {
 
 			Version version = plugin.getVersion();
 
-			MavenArtifactBuilder artefactBuilder = builder.addArtefact();
+			MavenArtifactBuilder artefactBuilder = builder.addArtifact();
 			artefactBuilder.setGroup(groupId);
 			artefactBuilder.setArtifactId(artifactId);
 			artefactBuilder.setVersion(createMavenVersion(version));

@@ -43,7 +43,7 @@ public class OsgiToMavenMapperTest {
 		MavenRepository mavenRepository = OsgiToMavenMapper
 				.createRepository(repository);
 		assertNotNull(mavenRepository);
-		List<MavenArtifact> artefacts = mavenRepository.getArtefacts();
+		List<MavenArtifact> artefacts = mavenRepository.getArtifacts();
 		assertFalse(artefacts.isEmpty());
 		MavenArtifact artefact = artefacts.get(0);
 		assertEquals(new MavenVersion(2,0,1), artefact.getVersion());

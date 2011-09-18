@@ -18,7 +18,7 @@ public class MavenRepositoryBuilder {
 
 	}
 
-	public MavenArtifactBuilder addArtefact() {
+	public MavenArtifactBuilder addArtifact() {
 		return new MavenArtifactBuilderInternal();
 	}
 

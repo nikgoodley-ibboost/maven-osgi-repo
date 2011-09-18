@@ -1,14 +1,7 @@
 package com.crsn.maven.utils.osgirepo.http.content;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
@@ -37,10 +31,7 @@ public class PomContentTest {
 		MavenArtifact artefact = new MavenArtifact("com.crsn",
 				"boo", new MavenVersion(1, 0),
 				Collections.<MavenDependency> emptyList(), new File("."));
-		PomContent content = new PomContent(artefact);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		content.serializeContent(bos);
-
+		Content content = new PomContent(artefact);
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 				+ "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">"
 				+ "<modelVersion>4.0.0</modelVersion>"
@@ -48,11 +39,8 @@ public class PomContentTest {
 				+ "<artifactId>boo</artifactId>"
 				+ "<version>1.0</version>"
 				+ "</project>";
-
-		Reader expectedReader = new StringReader(expected);
-		Reader generatedReader = new InputStreamReader(
-				new ByteArrayInputStream(bos.toByteArray()));
-		assertXMLEqual(expectedReader, generatedReader);
+		
+		ContentTestUtil.assertGeneratesXMLContent(expected, content);
 
 	}
 
@@ -62,13 +50,12 @@ public class PomContentTest {
 		MavenRepository repository = ContentTestUtil
 				.createMockMavenRepository();
 
-		List<MavenArtifact> artefacts = repository.getArtefacts();
+		List<MavenArtifact> artefacts = repository.getArtifacts();
 
 		MavenArtifact artefact = artefacts.get(0);
 
 		PomContent content = new PomContent(artefact);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		content.serializeContent(bos);
+		
 
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 				+ "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">"
@@ -89,10 +76,7 @@ public class PomContentTest {
 				+ "</dependency>"
 				+ "</dependencies>" + "</project>";
 
-		Reader expectedReader = new StringReader(expected);
-		Reader generatedReader = new InputStreamReader(
-				new ByteArrayInputStream(bos.toByteArray()));
-		assertXMLEqual(expectedReader, generatedReader);
+		ContentTestUtil.assertGeneratesXMLContent(expected, content);
 
 	}
 

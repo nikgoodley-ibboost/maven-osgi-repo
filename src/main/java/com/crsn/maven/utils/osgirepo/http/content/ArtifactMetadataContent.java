@@ -3,37 +3,40 @@ package com.crsn.maven.utils.osgirepo.http.content;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.Versioning;
+import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Writer;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
 
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifactVersions;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 
 public class ArtifactMetadataContent implements Content {
 	
-	public ArtifactMetadataContent(String groupId, String artefactId, List<MavenVersion> versions, MavenVersion latest, MavenVersion release) {
-		/*
-		 * <metadata> <versioning> <release>1.0.2</release>
-		 * <latest>1.0.3-SNAPSHOT</latest> <versions>
-		 * <version>1.0.0-SNAPSHOT</version> <version>1.0.0</version>
-		 * <version>1.0.1-SNAPSHOT</version> <version>1.0.1</version>
-		 * <version>1.0.2-SNAPSHOT</version> <version>1.0.2</version>
-		 * <version>1.0.3-SNAPSHOT</version> </versions> </versioning>
-		 * </metadata>
-		 */
+	private final Metadata meta;
+
+	public ArtifactMetadataContent(MavenArtifactVersions versions, MavenVersion latest, MavenVersion release) {
+
 		
-		Metadata meta=new Metadata();
-		meta.setGroupId(groupId);
-		meta.setArtifactId(artefactId);
+		meta = new Metadata();
+		meta.setGroupId(versions.getGroupId());
+		meta.setArtifactId(versions.getArtifactId());
 		Versioning versioning=new Versioning();
-//		versioning.setLastUpdatedTimestamp(lastUpdated);
 		versioning.setLatest(latest.toString());
 		versioning.setRelease(release.toString());
 		
-		
+		List<String> allVersions=new LinkedList<String>();
+		for (MavenVersion mavenVersion : versions.getVersions()) {
+			allVersions.add(mavenVersion.toString());
+		}
+		versioning.setVersions(allVersions);
+
+		meta.setVersioning(versioning);
 		
 	}
 
@@ -49,7 +52,8 @@ public class ArtifactMetadataContent implements Content {
 
 	@Override
 	public void serializeContent(OutputStream stream) throws IOException {
-
+		MetadataXpp3Writer writer=new MetadataXpp3Writer();
+		writer.write(stream, meta);
 	}
 
 }
