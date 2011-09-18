@@ -57,8 +57,8 @@ public class MavenVersionRange {
 		return result.toString();
 	}
 
-	public boolean limitsVersion() {
-		return (this.fromVersion != null) || (this.toVersion != null);
+	public boolean isLatestVersion() {
+		return (this.fromVersion == null) && (this.toVersion == null);
 	}
 
 }

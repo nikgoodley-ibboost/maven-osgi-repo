@@ -17,9 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
-import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 
@@ -35,7 +34,7 @@ public class PomContentTest {
 
 	@Test
 	public void canMarshalPomFile() throws IOException, SAXException {
-		MavenArtefact artefact = new MavenArtefact(new MavenGroup("com.crsn"),
+		MavenArtifact artefact = new MavenArtifact("com.crsn",
 				"boo", new MavenVersion(1, 0),
 				Collections.<MavenDependency> emptyList(), new File("."));
 		PomContent content = new PomContent(artefact);
@@ -63,9 +62,9 @@ public class PomContentTest {
 		MavenRepository repository = ContentTestUtil
 				.createMockMavenRepository();
 
-		List<MavenArtefact> artefacts = repository.getArtefacts();
+		List<MavenArtifact> artefacts = repository.getArtefacts();
 
-		MavenArtefact artefact = artefacts.get(0);
+		MavenArtifact artefact = artefacts.get(0);
 
 		PomContent content = new PomContent(artefact);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -86,6 +85,7 @@ public class PomContentTest {
 				+ "<dependency>"
 				+ "<artifactId>dependency</artifactId>"
 				+ "<groupId>com.crsn</groupId>"
+				+ "<version>LATEST</version>"
 				+ "</dependency>"
 				+ "</dependencies>" + "</project>";
 

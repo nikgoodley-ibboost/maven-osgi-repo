@@ -15,7 +15,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersionRange;
 
@@ -26,14 +26,14 @@ public class PomContent implements Content {
 	//private final Model pomModel;
 	private final Model pomModel;
 
-	public PomContent(MavenArtefact artefact) {
+	public PomContent(MavenArtifact artefact) {
 		
 		
 		pomModel = new Model();
 		
 		//project = factory.createProject(pomModel);
 		pomModel.setModelVersion("4.0.0");
-		pomModel.setArtifactId(artefact.getName());
+		pomModel.setArtifactId(artefact.getId());
 		pomModel.setGroupId(artefact.getGroup().toString());
 		pomModel.setVersion(artefact.getVersion().toString());
 
@@ -44,14 +44,17 @@ public class PomContent implements Content {
 			List<Dependency> dependencyList = new LinkedList<Dependency>();
 
 			for (MavenDependency dependency : dependencies) {
-				Dependency dependencyModlel = new Dependency();
-				dependencyModlel.setArtifactId(dependency.getArtefactId());
-				dependencyModlel.setGroupId(dependency.getGroup().toString());
+				Dependency dependencyModel = new Dependency();
+				dependencyModel.setArtifactId(dependency.getArtefactId());
+				dependencyModel.setGroupId(dependency.getGroup().toString());
 				MavenVersionRange versionRange = dependency.getVersionRange();
-				if (versionRange.limitsVersion()) {
-					dependencyModlel.setVersion(versionRange.toString());
+				if (versionRange.isLatestVersion()) {
+					dependencyModel.setVersion("LATEST");
+				} else {
+					dependencyModel.setVersion(versionRange.toString());
+								
 				}
-				dependencyList.add(dependencyModlel);
+				dependencyList.add(dependencyModel);
 
 			}
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
@@ -43,9 +43,9 @@ public class OsgiToMavenMapperTest {
 		MavenRepository mavenRepository = OsgiToMavenMapper
 				.createRepository(repository);
 		assertNotNull(mavenRepository);
-		List<MavenArtefact> artefacts = mavenRepository.getArtefacts();
+		List<MavenArtifact> artefacts = mavenRepository.getArtefacts();
 		assertFalse(artefacts.isEmpty());
-		MavenArtefact artefact = artefacts.get(0);
+		MavenArtifact artefact = artefacts.get(0);
 		assertEquals(new MavenVersion(2,0,1), artefact.getVersion());
 		List<MavenDependency> dependencies = artefact.getDependencies();
 		assertFalse(dependencies.isEmpty());

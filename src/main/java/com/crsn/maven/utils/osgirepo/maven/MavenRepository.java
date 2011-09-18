@@ -6,17 +6,17 @@ import java.util.List;
 
 public class MavenRepository {
 
-	private final List<MavenArtefact> artefacts;
+	private final List<MavenArtifact> artefacts;
 
-	public MavenRepository(List<MavenArtefact> artefacts) {
+	public MavenRepository(List<MavenArtifact> artefacts) {
 		if (artefacts == null) {
 			throw new NullPointerException("Null artefacts.");
 		}
-		this.artefacts = new LinkedList<MavenArtefact>(artefacts);
+		this.artefacts = new LinkedList<MavenArtifact>(artefacts);
 
 	}
 
-	public List<MavenArtefact> getArtefacts() {
+	public List<MavenArtifact> getArtefacts() {
 		return Collections.unmodifiableList(artefacts);
 	}
 

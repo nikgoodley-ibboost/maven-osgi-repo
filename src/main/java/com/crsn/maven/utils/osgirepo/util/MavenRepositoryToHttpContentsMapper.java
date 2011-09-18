@@ -7,19 +7,19 @@ import com.crsn.maven.utils.osgirepo.http.HttpServer;
 import com.crsn.maven.utils.osgirepo.http.content.DigestContent;
 import com.crsn.maven.utils.osgirepo.http.content.JarFileContent;
 import com.crsn.maven.utils.osgirepo.http.content.PomContent;
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 
 public class MavenRepositoryToHttpContentsMapper {
 
 	public static void registerArtefacts(MavenRepository repository,
 			HttpServer server) {
-		List<MavenArtefact> artefacts = repository.getArtefacts();
-		for (MavenArtefact mavenArtefact : artefacts) {
+		List<MavenArtifact> artefacts = repository.getArtefacts();
+		for (MavenArtifact mavenArtefact : artefacts) {
 
 			String directory = String.format("/%s/%s/%s", mavenArtefact
 					.getGroup().toString().replaceAll("\\.", "/"),
-					mavenArtefact.getName(), mavenArtefact.getVersion()
+					mavenArtefact.getId(), mavenArtefact.getVersion()
 							.toString());
 
 			PomContent pomContent = new PomContent(mavenArtefact);
@@ -35,10 +35,10 @@ public class MavenRepositoryToHttpContentsMapper {
 	}
 
 	private static void registerContentAndItsDigests(Content content,
-			MavenArtefact mavenArtefact, HttpServer server, String directory,
+			MavenArtifact mavenArtefact, HttpServer server, String directory,
 			String extension) {
 		String contentUrl = String.format("%s/%s-%s.%s", directory,
-				mavenArtefact.getName(), mavenArtefact.getVersion(), extension);
+				mavenArtefact.getId(), mavenArtefact.getVersion(), extension);
 		server.registerContent(contentUrl, content);
 
 		registerMacForContent(content, server, contentUrl, "MD5");

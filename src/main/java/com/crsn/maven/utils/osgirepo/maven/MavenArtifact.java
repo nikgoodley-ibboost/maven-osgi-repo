@@ -5,25 +5,25 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MavenArtefact {
+public class MavenArtifact {
 
-	private final MavenGroup group;
-	private final String name;
+	private final String group;
+	private final String id;
 	private final MavenVersion version;
 	private final File content;
 	private final List<MavenDependency> dependencies;
 
-	public MavenArtefact(MavenGroup group, String name, MavenVersion version,
+	public MavenArtifact(String group, String id, MavenVersion version,
 			List<MavenDependency> dependencies, File content) {
 		
 		if (group == null) {
 			throw new NullPointerException("Null group.");
 		}
 		this.group = group;
-		if (name == null) {
+		if (id == null) {
 			throw new NullPointerException("Null name.");
 		}
-		this.name = name;
+		this.id = id;
 
 		if (version == null) {
 			throw new NullPointerException("Null version");
@@ -43,12 +43,12 @@ public class MavenArtefact {
 
 	}
 
-	public MavenGroup getGroup() {
+	public String getGroup() {
 		return group;
 	}
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
 	}
 
 	public MavenVersion getVersion() {

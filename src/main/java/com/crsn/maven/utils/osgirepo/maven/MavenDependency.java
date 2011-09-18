@@ -2,11 +2,11 @@ package com.crsn.maven.utils.osgirepo.maven;
 
 public class MavenDependency {
 	
-	private final MavenGroup group;
+	private final String group;
 	private final String artefactId;
 	private final MavenVersionRange versionRange;
 
-	public MavenDependency(MavenGroup group, String artefactId, MavenVersionRange versionRange) {
+	public MavenDependency(String group, String artefactId, MavenVersionRange versionRange) {
 		if (group == null) {
 			throw new NullPointerException("Null group.");
 		}
@@ -28,7 +28,7 @@ public class MavenDependency {
 		return artefactId;
 	}
 	
-	public MavenGroup getGroup() {
+	public String getGroup() {
 		return group;
 	}
 	

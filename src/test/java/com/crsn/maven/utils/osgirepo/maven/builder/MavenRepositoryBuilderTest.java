@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 
 public class MavenRepositoryBuilderTest {
@@ -16,25 +16,25 @@ public class MavenRepositoryBuilderTest {
 	public void canBuildArtefacts() {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
 
-		MavenArtefactBuilder artefact = builder.addArtefact();
-		artefact.setArtefactId("id");
+		MavenArtifactBuilder artefact = builder.addArtefact();
+		artefact.setArtifactId("id");
 		artefact.setGroup("group");
 		artefact.setVersion(new MavenVersion(1, 0));
 		artefact.setContent(new File("."));
 		artefact.build();
 
-		List<MavenArtefact> artefacts = builder.build().getArtefacts();
+		List<MavenArtifact> artefacts = builder.build().getArtefacts();
 		assertFalse(artefacts.isEmpty());
-		MavenArtefact first = artefacts.get(0);
-		assertEquals("id", first.getName());
+		MavenArtifact first = artefacts.get(0);
+		assertEquals("id", first.getId());
 	}
 	
 	@Test
 	public void canBuildDependency() {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
 
-		MavenArtefactBuilder artefact = builder.addArtefact();
-		artefact.setArtefactId("id");
+		MavenArtifactBuilder artefact = builder.addArtefact();
+		artefact.setArtifactId("id");
 		artefact.setGroup("group");
 		artefact.setVersion(new MavenVersion(1, 0));
 		artefact.setContent(new File("."));
@@ -45,10 +45,10 @@ public class MavenRepositoryBuilderTest {
 		dependency.build();
 		artefact.build();
 
-		List<MavenArtefact> artefacts = builder.build().getArtefacts();
+		List<MavenArtifact> artefacts = builder.build().getArtefacts();
 		assertFalse(artefacts.isEmpty());
-		MavenArtefact first = artefacts.get(0);
-		assertEquals("id", first.getName());
+		MavenArtifact first = artefacts.get(0);
+		assertEquals("id", first.getId());
 		assertFalse(first.getDependencies().isEmpty());
 		
 	}

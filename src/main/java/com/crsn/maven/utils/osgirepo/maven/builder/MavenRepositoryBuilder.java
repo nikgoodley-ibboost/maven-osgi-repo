@@ -4,39 +4,37 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-
-import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
+import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
-import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersionRange;
 
 public class MavenRepositoryBuilder {
 
-	private final List<MavenArtefact> artefacts = new LinkedList<MavenArtefact>();
+	private final List<MavenArtifact> artefacts = new LinkedList<MavenArtifact>();
 
 	public MavenRepositoryBuilder() {
 
 	}
 
-	public MavenArtefactBuilder addArtefact() {
-		return new MavenArtefactBuilderInternal();
+	public MavenArtifactBuilder addArtefact() {
+		return new MavenArtifactBuilderInternal();
 	}
 
 	public MavenRepository build() {
 		return new MavenRepository(artefacts);
 	}
 
-	public class MavenArtefactBuilderInternal implements MavenArtefactBuilder {
+	public class MavenArtifactBuilderInternal implements MavenArtifactBuilder {
 
-		private MavenGroup group;
-		private String artefactId;
+		private String group;
+		private String artifactId;
 		private MavenVersion version;
 		private List<MavenDependency> dependencies = new LinkedList<MavenDependency>();
 		private File content;
 
-		public MavenArtefactBuilderInternal() {
+		public MavenArtifactBuilderInternal() {
 
 		}
 
@@ -49,7 +47,7 @@ public class MavenRepositoryBuilder {
 		 */
 		@Override
 		public void setGroup(String groupId) {
-			this.group = new MavenGroup(groupId);
+			this.group = groupId;
 		}
 
 		/*
@@ -60,8 +58,8 @@ public class MavenRepositoryBuilder {
 		 * (java.lang.String)
 		 */
 		@Override
-		public void setArtefactId(String artefactId) {
-			this.artefactId = artefactId;
+		public void setArtifactId(String artifactId) {
+			this.artifactId = artifactId;
 		}
 
 		/*
@@ -106,7 +104,7 @@ public class MavenRepositoryBuilder {
 		 */
 		@Override
 		public void build() {
-			artefacts.add(new MavenArtefact(group, artefactId, version,
+			artefacts.add(new MavenArtifact(group, artifactId, version,
 					dependencies, content));
 		}
 
@@ -139,7 +137,7 @@ public class MavenRepositoryBuilder {
 
 			@Override
 			public void build() {
-				dependencies.add(new MavenDependency(new MavenGroup(groupId), artefactId,
+				dependencies.add(new MavenDependency(groupId, artefactId,
 						versionRange));
 
 			}

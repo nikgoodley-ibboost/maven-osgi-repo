@@ -8,7 +8,7 @@ import org.osgi.framework.Version;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
-import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtefactBuilder;
+import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtifactBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
@@ -27,9 +27,9 @@ public class OsgiToMavenMapper {
 
 			Version version = plugin.getVersion();
 
-			MavenArtefactBuilder artefactBuilder = builder.addArtefact();
+			MavenArtifactBuilder artefactBuilder = builder.addArtefact();
 			artefactBuilder.setGroup(groupId);
-			artefactBuilder.setArtefactId(artifactId);
+			artefactBuilder.setArtifactId(artifactId);
 			artefactBuilder.setVersion(createMavenVersion(version));
 			artefactBuilder.setContent(plugin.getLocation());
 
