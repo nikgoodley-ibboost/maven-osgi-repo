@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.crsn.maven.utils.osgirepo.http.content.PomContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenGroup;
@@ -45,6 +44,7 @@ public class PomContentTest {
 
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 				+ "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">"
+				+ "<modelVersion>4.0.0</modelVersion>"
 				+ "<groupId>com.crsn</groupId>"
 				+ "<artifactId>boo</artifactId>"
 				+ "<version>1.0</version>"
@@ -60,7 +60,8 @@ public class PomContentTest {
 	@Test
 	public void canMarshalPomFileWithDependencies() throws IOException,
 			SAXException {
-		MavenRepository repository = ContentTestUtil.createMockMavenRepository();
+		MavenRepository repository = ContentTestUtil
+				.createMockMavenRepository();
 
 		List<MavenArtefact> artefacts = repository.getArtefacts();
 
@@ -72,6 +73,7 @@ public class PomContentTest {
 
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
 				+ "<project xmlns=\"http://maven.apache.org/POM/4.0.0\">"
+				+ "<modelVersion>4.0.0</modelVersion>"
 				+ "<groupId>com.crsn</groupId>"
 				+ "<artifactId>boo</artifactId>"
 				+ "<version>1.0</version>"
@@ -81,6 +83,10 @@ public class PomContentTest {
 				+ "<groupId>com.crsn</groupId>"
 				+ "<version>[1.0,)</version>"
 				+ "</dependency>"
+				+ "<dependency>"
+				+ "<artifactId>dependency</artifactId>"
+				+ "<groupId>com.crsn</groupId>"
+				+ "</dependency>"
 				+ "</dependencies>" + "</project>";
 
 		Reader expectedReader = new StringReader(expected);
@@ -89,4 +95,5 @@ public class PomContentTest {
 		assertXMLEqual(expectedReader, generatedReader);
 
 	}
+
 }

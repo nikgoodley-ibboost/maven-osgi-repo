@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.http.HttpServer;
-import com.crsn.maven.utils.osgirepo.http.content.JarFileContent;
 import com.crsn.maven.utils.osgirepo.http.content.DigestContent;
+import com.crsn.maven.utils.osgirepo.http.content.JarFileContent;
 import com.crsn.maven.utils.osgirepo.http.content.PomContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtefact;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;

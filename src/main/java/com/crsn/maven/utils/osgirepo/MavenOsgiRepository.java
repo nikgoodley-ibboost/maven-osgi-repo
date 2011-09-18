@@ -16,7 +16,6 @@ public class MavenOsgiRepository {
 		OsgiRepository osgiRepository=new OsgiRepository(repository);
 		MavenRepository mavenRepository = OsgiToMavenMapper.createRepository(osgiRepository);
 		MavenRepositoryToHttpContentsMapper.registerArtefacts(mavenRepository, server);
-		server.start();
 	}
 	
 	public void start() {

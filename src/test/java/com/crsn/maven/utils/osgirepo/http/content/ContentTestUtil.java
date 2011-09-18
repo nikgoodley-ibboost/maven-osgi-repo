@@ -27,11 +27,18 @@ public class ContentTestUtil {
 		dependencyBuilder.setVersionRange(new MavenVersion(1, 0), true, null,
 				false);
 		dependencyBuilder.build();
+
+		MavenDependencyBuilder secondDependencyBuilder = artefactBuilder
+				.addDependency();
+		secondDependencyBuilder.setArtefactId("dependency");
+		secondDependencyBuilder.setGroupId("com.crsn");
+		secondDependencyBuilder.setVersionRange(null, true, null, false);
+		secondDependencyBuilder.build();
+
 		artefactBuilder.build();
-	
+
 		MavenRepository repository = builder.build();
 		return repository;
 	}
-	
-	
+
 }

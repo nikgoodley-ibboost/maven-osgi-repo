@@ -38,18 +38,19 @@ public class DigestContent implements Content {
 			throw new RuntimeException(e);
 		}
 		try {
-			this.asciiEncodedMac = toHexString(macStream.getMac()).getBytes(
+			this.asciiEncodedMac = toAsciiEncodedHexString(macStream.getMac()).getBytes(
 					"ASCII");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private String toHexString(byte[] mac) {
+	private String toAsciiEncodedHexString(byte[] mac) {
 		StringBuilder builder = new StringBuilder();
 		for (byte b : mac) {
 			builder.append(String.format("%x", b));
 		}
+		builder.append("\n");
 		return builder.toString();
 	}
 
