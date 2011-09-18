@@ -42,7 +42,7 @@ public class MavenRepository {
 		HashMap<Pair<String, String>, TreeSet<MavenVersion>> versions = new HashMap<Pair<String, String>, TreeSet<MavenVersion>>();
 
 		for (MavenArtifact mavenArtifact : artifacts) {
-			Pair<String, String> groupAndId = Pair.of(mavenArtifact.getGroup(), mavenArtifact.getArtifactId());
+			Pair<String, String> groupAndId = Pair.of(mavenArtifact.getGroupId(), mavenArtifact.getArtifactId());
 			TreeSet<MavenVersion> existingVersions = versions.remove(groupAndId);
 			if (existingVersions == null) {
 				existingVersions = new TreeSet<MavenVersion>();

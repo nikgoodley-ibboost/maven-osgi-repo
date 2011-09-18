@@ -35,13 +35,39 @@ public class MavenOsgiRepositoryTest {
 	}
 
 	@Test
-	public void willRespondWitJarFile() {
+	public void willRespondWithJarFile() {
 		HttpResponseWrapper response = HttpResponseWrapper
 				.getResponse(repository.getServerUrl()
 						+ "/org/eclipse/xtext/xtend2/lib/2.0.1/lib-2.0.1.jar");
 		assertEquals(200, response.getStatusCode());
 	}
+	
+	@Test
+	public void willRespondWithArtifactMetaDataFile() {
+		HttpResponseWrapper response = HttpResponseWrapper
+				.getResponse(repository.getServerUrl()
+						+ "/org/eclipse/xtext/xtend2/lib/maven-metadata.xml.md5");
+		assertEquals(200, response.getStatusCode());
+	}
 
+	
+	@Test
+	public void willRespondWithArtifactMetaDataMd5File() {
+		HttpResponseWrapper response = HttpResponseWrapper
+				.getResponse(repository.getServerUrl()
+						+ "/org/eclipse/xtext/xtend2/lib/maven-metadata.xml.md5");
+		assertEquals(200, response.getStatusCode());
+	}
+
+	@Test
+	public void willRespondWithArtifactMetaDataSha1File() {
+		HttpResponseWrapper response = HttpResponseWrapper
+				.getResponse(repository.getServerUrl()
+						+ "/org/eclipse/xtext/xtend2/lib/maven-metadata.xml.sha1");
+		assertEquals(200, response.getStatusCode());
+	}
+
+	
 	@Test
 	public void willRespondWithMd5FileForPomDigest() {
 		HttpResponseWrapper response = HttpResponseWrapper

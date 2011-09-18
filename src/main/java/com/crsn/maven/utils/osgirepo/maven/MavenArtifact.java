@@ -7,23 +7,23 @@ import java.util.List;
 
 public class MavenArtifact {
 
-	private final String group;
-	private final String id;
+	private final String groupId;
+	private final String artifactId;
 	private final MavenVersion version;
 	private final File content;
 	private final List<MavenDependency> dependencies;
 
-	public MavenArtifact(String group, String id, MavenVersion version,
+	public MavenArtifact(String groupId, String artifactId, MavenVersion version,
 			List<MavenDependency> dependencies, File content) {
 		
-		if (group == null) {
-			throw new NullPointerException("Null group.");
+		if (groupId == null) {
+			throw new NullPointerException("Null groupId.");
 		}
-		this.group = group;
-		if (id == null) {
-			throw new NullPointerException("Null name.");
+		this.groupId = groupId;
+		if (artifactId == null) {
+			throw new NullPointerException("Null artifactId.");
 		}
-		this.id = id;
+		this.artifactId = artifactId;
 
 		if (version == null) {
 			throw new NullPointerException("Null version");
@@ -43,12 +43,12 @@ public class MavenArtifact {
 
 	}
 
-	public String getGroup() {
-		return group;
+	public String getGroupId() {
+		return groupId;
 	}
 
 	public String getArtifactId() {
-		return id;
+		return artifactId;
 	}
 
 	public MavenVersion getVersion() {
