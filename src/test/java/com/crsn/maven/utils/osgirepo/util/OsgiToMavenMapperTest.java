@@ -11,12 +11,13 @@ import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
+import com.crsn.maven.utils.osgirepo.osgi.JarOsgiPlugin;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 
 public class OsgiToMavenMapperTest {
 
-	private final OsgiPlugin osgiPlugin = new OsgiPlugin(
+	private final OsgiPlugin osgiPlugin = new JarOsgiPlugin(
 			TestUtil.getFileOfResource("mockrepo/org.eclipse.xtext.xtend2.lib_2.0.1.v201108020636.jar"));
 
 	private final OsgiRepository repository = new OsgiRepository(

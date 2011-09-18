@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Version;
 
-public class OsgiPlugin {
+public class JarOsgiPlugin implements OsgiPlugin {
 	
 	private final File location;
 	
@@ -22,7 +22,7 @@ public class OsgiPlugin {
 	private final Version pluginVersion;
 	private final List<OsgiDependency> requiredBundles;
 
-	public OsgiPlugin(File location) {
+	public JarOsgiPlugin(File location) {
 		if (location == null) {
 			throw new NullPointerException("Null location.");
 		}
@@ -50,18 +50,34 @@ public class OsgiPlugin {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getName()
+	 */
+	@Override
 	public String getName() {
 		return pluginName;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getVersion()
+	 */
+	@Override
 	public Version getVersion() {
 		return this.pluginVersion;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getLocation()
+	 */
+	@Override
 	public File getLocation() {
 		return location;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getRequiredBundles()
+	 */
+	@Override
 	public List<OsgiDependency> getRequiredBundles() {
 		return requiredBundles;
 	}
