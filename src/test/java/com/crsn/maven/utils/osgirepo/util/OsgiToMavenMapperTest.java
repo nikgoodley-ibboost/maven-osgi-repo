@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
+import org.osgi.framework.Version;
 
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
@@ -33,12 +34,13 @@ public class OsgiToMavenMapperTest {
 
 	@Test
 	public void canMapArtifactGroup() {
-
 		String groupId = OsgiToMavenMapper.createGroupId(osgiPlugin.getName());
 		assertEquals("org.eclipse.xtext.xtend2", groupId);
-
 	}
-
+	
+	
+	
+	
 	@Test
 	public void canCreateMavenRepository() {
 		MavenRepository mavenRepository = OsgiToMavenMapper
@@ -52,6 +54,10 @@ public class OsgiToMavenMapperTest {
 		assertFalse(dependencies.isEmpty());
 		MavenDependency firstDependency = dependencies.get(0);
 		assertEquals("lib",firstDependency.getArtefactId());
-		assertEquals("org.eclipse.xtext.xbase",firstDependency.getGroup().toString());
+		assertEquals("org.eclipse.xtext.xbase",firstDependency.getGroup().toString());	
+		assertEquals("[2.0.0,)",firstDependency.getVersionRange().toString());
+	
+		
+		
 	}
 }

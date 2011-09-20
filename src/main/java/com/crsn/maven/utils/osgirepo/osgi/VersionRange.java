@@ -80,8 +80,7 @@ public class VersionRange {
 		} else if (definition.startsWith("(")) {
 			return createRange(definition, false);
 		} else {
-			return new VersionRange(new Version(definition), true, new Version(
-					definition), true);
+			return new VersionRange(new Version(definition), true,null, false);
 		}
 	}
 

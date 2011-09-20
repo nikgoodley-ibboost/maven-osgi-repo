@@ -101,6 +101,16 @@ public class VersionRangeTest {
 		assertEquals(null,range.getTo());
 		assertFalse(range.isIncludingTo());	
 	}
+	
+	
+	@Test
+	public void canParseSingleVersion() {
+		VersionRange range=VersionRange.parseVersionRange("1.0.0");
+		assertEquals(new Version(1,0,0),range.getFrom());
+		assertTrue(range.isIncludingFrom());
+		assertEquals(null,range.getTo());
+		assertFalse(range.isIncludingTo());	
+	}
 
 
 }

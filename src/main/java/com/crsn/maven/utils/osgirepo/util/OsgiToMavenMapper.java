@@ -34,20 +34,17 @@ public class OsgiToMavenMapper {
 			artefactBuilder.setContent(plugin.getLocation());
 
 			for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
-				MavenDependencyBuilder dependencyBuilder = artefactBuilder
-						.addDependency();
+				MavenDependencyBuilder dependencyBuilder = artefactBuilder.addDependency();
 				dependencyBuilder.setArtefactId(createArtifactName(osgiDependency.getName()));
-				dependencyBuilder.setGroupId(createGroupId(osgiDependency
-						.getName()));
+				dependencyBuilder.setGroupId(createGroupId(osgiDependency.getName()));
 
 				VersionRange versionRange = osgiDependency.getVersionRange();
 
-				dependencyBuilder.setVersionRange(
-						createMavenVersion(versionRange.getFrom()),
-						versionRange.isIncludingFrom(),
-						createMavenVersion(versionRange.getTo()),
+				dependencyBuilder.setVersionRange(createMavenVersion(versionRange.getFrom()),
+						versionRange.isIncludingFrom(), createMavenVersion(versionRange.getTo()),
 						versionRange.isIncludingTo());
 				dependencyBuilder.build();
+
 			}
 
 			artefactBuilder.build();
@@ -58,12 +55,11 @@ public class OsgiToMavenMapper {
 
 	}
 
-	private static MavenVersion createMavenVersion(Version version) {
+	static MavenVersion createMavenVersion(Version version) {
 		if (version == null) {
 			return null;
 		}
-		return new MavenVersion(version.getMajor(), version.getMinor(),
-				version.getMicro());
+		return new MavenVersion(version.getMajor(), version.getMinor(), version.getMicro());
 	}
 
 	static String createGroupId(String pluginName) {
@@ -72,13 +68,12 @@ public class OsgiToMavenMapper {
 		List<String> parts1 = Arrays.asList(pluginName.split("\\."));
 		List<String> parts = parts1;
 
-		String groupId = StringUtils.join(parts.subList(0, parts.size() - 1),
-				'.');
+		String groupId = StringUtils.join(parts.subList(0, parts.size() - 1), '.');
 		return groupId;
 	}
 
 	static String createArtifactName(String pluginName) {
-//		String pluginName = plugin.getName();
+		// String pluginName = plugin.getName();
 
 		List<String> parts = Arrays.asList(pluginName.split("\\."));
 		List<String> groupParts = parts;

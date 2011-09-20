@@ -16,5 +16,14 @@ public class OsgiRepositoryTest {
 		OsgiPlugin plugin = repo.getPlugins().get(0);
 		assertFalse(plugin.getRequiredBundles().isEmpty());
 	}
+	
+	
+	@Test
+	public void canLoadRepositoryWithDirectoryPlugins() {
+		OsgiRepository repo=new OsgiRepository(TestUtil.getFileOfResource("mockrepo-2"));
+		assertFalse(repo.getPlugins().isEmpty());
+		OsgiPlugin plugin = repo.getPlugins().get(0);
+		assertFalse(plugin.getRequiredBundles().isEmpty());
+	}
 
 }

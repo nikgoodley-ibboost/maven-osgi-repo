@@ -43,9 +43,9 @@ public class JarOsgiPlugin implements OsgiPlugin {
 			
 			
 		} catch (ZipException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(String.format("Could not open '%s': %s",location.getAbsolutePath(),e.getMessage()),e);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(String.format("Could not open '%s': %s",location.getAbsolutePath(),e.getMessage()),e);
 		}
 		
 	}
