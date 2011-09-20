@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 public class OsgiRepository {
 	
-	private List<JarOsgiPlugin> plugins=new LinkedList<JarOsgiPlugin>();
+	private List<OsgiPlugin> plugins=new LinkedList<OsgiPlugin>();
 	
 	public OsgiRepository(File directory) {
 		if (directory == null) {
@@ -27,7 +27,7 @@ public class OsgiRepository {
 		
 	}
 	
-	public List<JarOsgiPlugin> getPlugins() {
+	public List<OsgiPlugin> getPlugins() {
 		return Collections.unmodifiableList(plugins);
 	}
 

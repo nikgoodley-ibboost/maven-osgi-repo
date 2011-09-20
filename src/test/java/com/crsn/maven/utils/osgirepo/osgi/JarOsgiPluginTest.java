@@ -10,7 +10,7 @@ import org.osgi.framework.Version;
 
 import com.crsn.maven.utils.osgirepo.util.TestUtil;
 
-public class OsgiPluginTest {
+public class JarOsgiPluginTest {
 
 	private final OsgiPlugin plugin = new JarOsgiPlugin(
 			TestUtil.getFileOfResource("mockrepo/org.eclipse.xtext.xtend2.lib_2.0.1.v201108020636.jar"));;
