@@ -19,13 +19,13 @@ public class DigestContentTest {
 	@Test
 	public void canCalculateMd5Digest() throws IOException {
 
-		assertEquals("08c5926ca861023c1d2a36653fd88e2\n", createDigestOfType("MD5"));
+		assertEquals("08c5926ca861023c1d2a36653fd88e2\r\n", createDigestOfType("MD5"));
 	}
 
 	@Test
 	public void canCalculateSha1Mac() throws IOException {
 
-		assertEquals("d869db7fe62fb07c25a0403ecaea5531744b5fb\n",
+		assertEquals("d869db7fe62fb07c25a0403ecaea5531744b5fb\r\n",
 				createDigestOfType("SHA1"));
 	}
 

@@ -50,7 +50,7 @@ public class DigestContent implements Content {
 		for (byte b : mac) {
 			builder.append(String.format("%x", b));
 		}
-		builder.append("\n");
+		builder.append("\r\n");
 		return builder.toString();
 	}
 
