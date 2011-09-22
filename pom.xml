@@ -72,6 +72,14 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>com.google.code.mjl</groupId>
+			<artifactId>mjl</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+
+
 	</dependencies>
 	<build>
 		<plugins>

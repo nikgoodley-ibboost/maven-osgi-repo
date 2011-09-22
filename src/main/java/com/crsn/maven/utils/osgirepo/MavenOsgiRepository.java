@@ -11,23 +11,23 @@ import com.crsn.maven.utils.osgirepo.util.OsgiToMavenMapper;
 public class MavenOsgiRepository {
 	private final HttpServer server;
 
-	public MavenOsgiRepository(File repository, int port) {
+	public MavenOsgiRepository(File repositoryDirectory, int port) {
 		server = new HttpServer(port);
-		OsgiRepository osgiRepository=new OsgiRepository(repository);
+		OsgiRepository osgiRepository = OsgiRepository.createRepository(repositoryDirectory);
 		MavenRepository mavenRepository = OsgiToMavenMapper.createRepository(osgiRepository);
 		MavenRepositoryToHttpContentsMapper.registerArtefacts(mavenRepository, server);
 	}
-	
+
 	public void start() {
 		server.start();
 	}
-	
+
 	public void stop() {
 		server.stop();
 	}
-	
+
 	public String getServerUrl() {
 		return server.getServerUrl();
 	}
-	
+
 }

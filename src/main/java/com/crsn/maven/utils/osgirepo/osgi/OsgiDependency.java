@@ -1,6 +1,5 @@
 package com.crsn.maven.utils.osgirepo.osgi;
 
-
 public class OsgiDependency {
 
 	private final String name;
@@ -25,6 +24,25 @@ public class OsgiDependency {
 
 	public VersionRange getVersionRange() {
 		return versionRange;
+	}
+
+	public boolean isResolvedBy(OsgiPlugin osgiPlugin) {
+		if (osgiPlugin == null) {
+			throw new NullPointerException("Null osgi plugin.");
+		}
+
+		String pluginName = osgiPlugin.getName();
+		if (!pluginName.equals(name)) {
+			return false;
+		}
+
+		return versionRange.contains(osgiPlugin.getVersion());
+
+	}
+
+	@Override
+	public String toString() {
+		return "OsgiDependency [name=" + name + ", versionRange=" + versionRange + "]";
 	}
 
 }

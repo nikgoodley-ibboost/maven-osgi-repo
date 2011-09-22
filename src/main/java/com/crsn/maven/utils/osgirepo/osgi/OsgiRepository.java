@@ -1,24 +1,24 @@
 package com.crsn.maven.utils.osgirepo.osgi;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.FalseFileFilter;
-import org.apache.commons.io.filefilter.OrFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import java.util.TreeSet;
 
 public class OsgiRepository {
 
-	private List<OsgiPlugin> plugins = new LinkedList<OsgiPlugin>();
+	private List<OsgiPlugin> plugins;
 
-	public OsgiRepository(File directory) {
+	private OsgiRepository(List<OsgiPlugin> plugins) {
+		this.plugins = plugins;
+	}
+
+	public static OsgiRepository createRepository(File directory) {
+
+		LinkedList<OsgiPlugin> plugins = new LinkedList<OsgiPlugin>();
+
 		if (directory == null) {
 			throw new NullPointerException("Null directory.");
 		}
@@ -38,10 +38,43 @@ public class OsgiRepository {
 			}
 		}
 
+		return new OsgiRepository(plugins);
+
+	}
+
+	public static OsgiRepository createRepository(List<? extends OsgiPlugin> plugins) {
+		return new OsgiRepository(new LinkedList<OsgiPlugin>(plugins));
 	}
 
 	public List<OsgiPlugin> getPlugins() {
 		return Collections.unmodifiableList(plugins);
+	}
+
+	public OsgiPlugin resolveDependency(OsgiDependency dependency) {
+
+		if (dependency == null) {
+			throw new NullPointerException("Null dependency.");
+		}
+
+		TreeSet<OsgiPlugin> resolved = new TreeSet<OsgiPlugin>(new Comparator<OsgiPlugin>() {
+			@Override
+			public int compare(OsgiPlugin o1, OsgiPlugin o2) {
+				return o1.getVersion().compareTo(o2.getVersion());
+			}
+		});
+
+		for (OsgiPlugin osgiPlugin : this.plugins) {
+			if (dependency.isResolvedBy(osgiPlugin)) {
+				resolved.add(osgiPlugin);
+			}
+		}
+
+		if (resolved.isEmpty()) {
+			return null;
+		} else {
+			return resolved.last();
+		}
+
 	}
 
 }

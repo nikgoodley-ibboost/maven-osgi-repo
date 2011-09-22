@@ -15,8 +15,11 @@ import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 import com.crsn.maven.utils.osgirepo.osgi.VersionRange;
+import com.google.code.mjl.Log;
+import com.google.code.mjl.LogFactory;
 
 public class OsgiToMavenMapper {
+	private static final Log log = LogFactory.getLog();
 
 	public static MavenRepository createRepository(OsgiRepository repository) {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
@@ -34,17 +37,27 @@ public class OsgiToMavenMapper {
 			artefactBuilder.setContent(plugin.getLocation());
 
 			for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
-				MavenDependencyBuilder dependencyBuilder = artefactBuilder.addDependency();
-				dependencyBuilder.setArtefactId(createArtifactName(osgiDependency.getName()));
-				dependencyBuilder.setGroupId(createGroupId(osgiDependency.getName()));
 
-				VersionRange versionRange = osgiDependency.getVersionRange();
+				OsgiPlugin osgiPlugin = repository.resolveDependency(osgiDependency);
 
-				dependencyBuilder.setVersionRange(createMavenVersion(versionRange.getFrom()),
-						versionRange.isIncludingFrom(), createMavenVersion(versionRange.getTo()),
-						versionRange.isIncludingTo());
-				dependencyBuilder.build();
+				if (osgiPlugin == null) {
+					log.warn("Could not resolve dependency %s.", osgiDependency);
+					// throw new
+					// RuntimeException(String.format("Could not resolve dependency %s.",
+					// osgiDependency));
+				} else {
 
+					MavenDependencyBuilder dependencyBuilder = artefactBuilder.addDependency();
+					dependencyBuilder.setArtefactId(createArtifactName(osgiPlugin.getName()));
+					dependencyBuilder.setGroupId(createGroupId(osgiPlugin.getName()));
+
+					// VersionRange versionRange =
+					// osgiDependency.getVersionRange();
+
+					dependencyBuilder.setVersionRange(createMavenVersion(osgiPlugin.getVersion()), true,
+							createMavenVersion(osgiPlugin.getVersion()), true);
+					dependencyBuilder.build();
+				}
 			}
 
 			artefactBuilder.build();
