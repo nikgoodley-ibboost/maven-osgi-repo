@@ -7,7 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import com.google.code.mjl.Log;
+import com.google.code.mjl.LogFactory;
+
 public class OsgiRepository {
+
+	private static Log log = LogFactory.getLog();
 
 	private List<OsgiPlugin> plugins;
 
@@ -28,12 +33,12 @@ public class OsgiRepository {
 		for (File file : listFiles) {
 			if (file.isFile() && file.getName().toLowerCase().endsWith("jar")) {
 				JarOsgiPlugin osgiPlugin = new JarOsgiPlugin(file);
-				System.out.printf("added plugin %s/%s%n", osgiPlugin.getName(), osgiPlugin.getVersion());
+				log.info("added plugin %s/%s", osgiPlugin.getName(), osgiPlugin.getVersion());
 				plugins.add(osgiPlugin);
 
 			} else if (file.isDirectory()) {
 				DirectoryOsgiPlugin osgiPlugin = new DirectoryOsgiPlugin(file);
-				System.out.printf("added plugin %s/%s%n", osgiPlugin.getName(), osgiPlugin.getVersion());
+				log.info("added plugin %s/%s", osgiPlugin.getName(), osgiPlugin.getVersion());
 				plugins.add(osgiPlugin);
 			}
 		}

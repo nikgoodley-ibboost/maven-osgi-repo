@@ -16,7 +16,12 @@ import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+import com.google.code.mjl.Log;
+import com.google.code.mjl.LogFactory;
+
 public class HttpServer implements Container {
+
+	private static final Log log = LogFactory.getLog();
 
 	private enum State {
 		NOT_RUNNING, RUNNING;
@@ -44,8 +49,7 @@ public class HttpServer implements Container {
 	public String getServerUrl() {
 		checkState(State.RUNNING);
 		try {
-			return String.format("http://%s:%d/", InetAddress.getLocalHost().getHostName(),
-					listeningOn.getPort());
+			return String.format("http://%s:%d/", InetAddress.getLocalHost().getHostName(), listeningOn.getPort());
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
@@ -55,8 +59,7 @@ public class HttpServer implements Container {
 	public void start() {
 		try {
 			connection = new SocketConnection(this);
-			listeningOn = (InetSocketAddress) connection
-					.connect(new InetSocketAddress(port));
+			listeningOn = (InetSocketAddress) connection.connect(new InetSocketAddress(port));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -81,8 +84,7 @@ public class HttpServer implements Container {
 
 	private void checkState(State expected) {
 		if (currentState != expected) {
-			throw new IllegalStateException(String.format(
-					"Server in illegal state %s, expected %s.", currentState,
+			throw new IllegalStateException(String.format("Server in illegal state %s, expected %s.", currentState,
 					expected));
 		}
 	}
@@ -94,8 +96,8 @@ public class HttpServer implements Container {
 		if (content == null) {
 			throw new NullPointerException("Null content.");
 		}
-		
-		System.out.printf("Registered %s%n", path);
+
+		log.info("Registered %s", path);
 		contents.put(path, content);
 	}
 
@@ -110,7 +112,7 @@ public class HttpServer implements Container {
 	@Override
 	public void handle(Request req, Response res) {
 		Path path = req.getPath();
-		System.out.printf("path: %s%n", path.getPath());
+		log.info("request: %s", path.getPath());
 		try {
 			Content content = contents.get(path.toString());
 			if (content != null) {
