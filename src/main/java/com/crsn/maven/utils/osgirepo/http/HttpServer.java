@@ -112,7 +112,7 @@ public class HttpServer implements Container {
 	@Override
 	public void handle(Request req, Response res) {
 		Path path = req.getPath();
-		log.info("request: %s", path.getPath());
+
 		try {
 			Content content = contents.get(path.toString());
 			if (content != null) {
@@ -123,7 +123,9 @@ public class HttpServer implements Container {
 				OutputStream outputStream = res.getOutputStream();
 				content.serializeContent(outputStream);
 				outputStream.close();
+				log.info("path: %s", path.getPath());
 			} else {
+				log.warn("failed request: %s", path.getPath());
 
 				res.setCode(404);
 				res.set("Content-Type", "text/plain");
