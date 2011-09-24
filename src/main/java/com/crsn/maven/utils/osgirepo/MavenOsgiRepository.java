@@ -1,7 +1,11 @@
 package com.crsn.maven.utils.osgirepo;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.http.HttpServer;
 import com.crsn.maven.utils.osgirepo.http.content.EmptyContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
@@ -16,7 +20,12 @@ public class MavenOsgiRepository {
 		server = new HttpServer(port);
 		OsgiRepository osgiRepository = OsgiRepository.createRepository(repositoryDirectory);
 		MavenRepository mavenRepository = OsgiToMavenMapper.createRepository(osgiRepository);
-		MavenRepositoryToHttpContentsMapper.registerArtefacts(mavenRepository, server);
+		
+		Map<String, Content> contentMap = MavenRepositoryToHttpContentsMapper.createContentForRepository(mavenRepository);
+		for (Entry<String, Content> entry : contentMap.entrySet()) {
+			server.registerContent(entry.getKey(), entry.getValue());
+		}
+		
 		server.registerContent("/", new EmptyContent());
 
 	}

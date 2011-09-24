@@ -7,6 +7,7 @@ import java.util.List;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenDependency;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
+import com.crsn.maven.utils.osgirepo.maven.MavenSourceArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersionRange;
 
@@ -22,17 +23,35 @@ public class MavenRepositoryBuilder {
 		return new MavenArtifactBuilderInternal();
 	}
 
+	public MavenArtifactBuilder addSourceArtifact() {
+		return new MavenSourceArtifactBuilderInternal();
+	}
+
 	public MavenRepository build() {
 		return new MavenRepository(artefacts);
 	}
 
+	public class MavenSourceArtifactBuilderInternal extends MavenArtifactBuilderInternal {
+
+		@Override
+		public MavenDependencyBuilder addDependency() {
+			throw new IllegalStateException("Source artifacts don't have dependencies.");
+		}
+
+		@Override
+		public void build() {
+			artefacts.add(new MavenSourceArtifact(group, artifactId, version, content));
+		}
+
+	}
+
 	public class MavenArtifactBuilderInternal implements MavenArtifactBuilder {
 
-		private String group;
-		private String artifactId;
-		private MavenVersion version;
+		protected String group;
+		protected String artifactId;
+		protected MavenVersion version;
 		private List<MavenDependency> dependencies = new LinkedList<MavenDependency>();
-		private File content;
+		protected File content;
 
 		public MavenArtifactBuilderInternal() {
 
@@ -104,12 +123,10 @@ public class MavenRepositoryBuilder {
 		 */
 		@Override
 		public void build() {
-			artefacts.add(new MavenArtifact(group, artifactId, version,
-					dependencies, content));
+			artefacts.add(new MavenArtifact(group, artifactId, version, dependencies, content));
 		}
 
-		private class InternalDependencyBuilder implements
-				MavenDependencyBuilder {
+		private class InternalDependencyBuilder implements MavenDependencyBuilder {
 
 			private String groupId;
 			private String artefactId;
@@ -128,17 +145,14 @@ public class MavenRepositoryBuilder {
 			}
 
 			@Override
-			public void setVersionRange(MavenVersion from,
-					boolean includingFrom, MavenVersion to, boolean includingTo) {
-				this.versionRange = new MavenVersionRange(from, includingFrom,
-						to, includingTo);
+			public void setVersionRange(MavenVersion from, boolean includingFrom, MavenVersion to, boolean includingTo) {
+				this.versionRange = new MavenVersionRange(from, includingFrom, to, includingTo);
 
 			}
 
 			@Override
 			public void build() {
-				dependencies.add(new MavenDependency(groupId, artefactId,
-						versionRange));
+				dependencies.add(new MavenDependency(groupId, artefactId, versionRange));
 
 			}
 

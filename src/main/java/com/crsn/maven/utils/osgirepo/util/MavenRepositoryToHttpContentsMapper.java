@@ -1,9 +1,10 @@
 package com.crsn.maven.utils.osgirepo.util;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
-import com.crsn.maven.utils.osgirepo.http.HttpServer;
 import com.crsn.maven.utils.osgirepo.http.content.ArtifactMetadataContent;
 import com.crsn.maven.utils.osgirepo.http.content.DigestContent;
 import com.crsn.maven.utils.osgirepo.http.content.JarFileContent;
@@ -11,57 +12,86 @@ import com.crsn.maven.utils.osgirepo.http.content.PomContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifactVersions;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
+import com.crsn.maven.utils.osgirepo.maven.MavenSourceArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 
 public class MavenRepositoryToHttpContentsMapper {
 
-	public static void registerArtefacts(MavenRepository repository, HttpServer server) {
+	public static Map<String, Content> createContentForRepository(MavenRepository repository) {
+		Map<String, Content> contentMap = new HashMap<String, Content>();
+
 		List<MavenArtifact> artefacts = repository.getArtifacts();
 		for (MavenArtifact mavenArtefact : artefacts) {
+
+			boolean isSourceArtifact = mavenArtefact instanceof MavenSourceArtifact;
 
 			String directory = String.format("/%s/%s/%s", mavenArtefact.getGroupId().replaceAll("\\.", "/"),
 					mavenArtefact.getArtifactId(), mavenArtefact.getVersion().toString());
 
-			PomContent pomContent = new PomContent(mavenArtefact);
-			registerContentAndItsDigests(pomContent, mavenArtefact, server, directory, "pom");
-
-			JarFileContent jarContent = new JarFileContent(mavenArtefact.getContent());
-			registerContentAndItsDigests(jarContent, mavenArtefact, server, directory, "jar");
+			if (isSourceArtifact) {
+				registerJarSourceContent(contentMap, mavenArtefact, directory);
+			} else {
+				registerPomContent(contentMap, mavenArtefact, directory);
+				registerJarContent(contentMap, mavenArtefact, directory);
+			}
 
 		}
 
 		for (MavenArtifactVersions mavenArtifactVersions : repository.getArtifactVersions()) {
-			
-			
-			String contentFile = String.format("/%s/%s/maven-metadata.xml", mavenArtifactVersions.getGroupId().replaceAll("\\.", "/"),
-					mavenArtifactVersions.getArtifactId());
-			
+
+			String contentFile = String.format("/%s/%s/maven-metadata.xml", mavenArtifactVersions.getGroupId()
+					.replaceAll("\\.", "/"), mavenArtifactVersions.getArtifactId());
+
 			MavenVersion lastVersion = mavenArtifactVersions.getVersions().last();
-			ArtifactMetadataContent metadataContent=new ArtifactMetadataContent(mavenArtifactVersions, lastVersion, lastVersion);
-			
-			server.registerContent(contentFile, metadataContent);
-			registerMacForContent(metadataContent, server, contentFile, "MD5");
-			registerMacForContent(metadataContent, server, contentFile, "SHA1");
-			
+			ArtifactMetadataContent metadataContent = new ArtifactMetadataContent(mavenArtifactVersions, lastVersion,
+					lastVersion);
+
+			contentMap.put(contentFile, metadataContent);
+			registerDigestForContent(metadataContent, contentMap, contentFile, "MD5");
+			registerDigestForContent(metadataContent, contentMap, contentFile, "SHA1");
+
 		}
+
+		return contentMap;
+
 	}
 
-	private static void registerContentAndItsDigests(Content content, MavenArtifact mavenArtefact, HttpServer server,
-			String directory, String extension) {
-		String contentUrl = String.format("%s/%s-%s.%s", directory, mavenArtefact.getArtifactId(),
-				mavenArtefact.getVersion(), extension);
-		server.registerContent(contentUrl, content);
-
-		registerMacForContent(content, server, contentUrl, "MD5");
-
-		registerMacForContent(content, server, contentUrl, "SHA1");
+	private static void registerJarSourceContent(Map<String, Content> contentMap, MavenArtifact mavenArtefact,
+			String directory) {
+		JarFileContent jarContent = new JarFileContent(mavenArtefact.getContent());
+		String contentUrl = String.format("%s/%s-%s-sources.jar", directory, mavenArtefact.getArtifactId(),
+				mavenArtefact.getVersion());
+		registerContentAndItsDigests(jarContent, contentUrl, contentMap);
 	}
 
-	private static String registerMacForContent(Content content, HttpServer server, String originalUrl, String macType) {
+	private static void registerJarContent(Map<String, Content> contentMap, MavenArtifact mavenArtefact,
+			String directory) {
+		JarFileContent jarContent = new JarFileContent(mavenArtefact.getContent());
+		String contentUrl = String.format("%s/%s-%s.jar", directory, mavenArtefact.getArtifactId(),
+				mavenArtefact.getVersion());
+		registerContentAndItsDigests(jarContent, contentUrl, contentMap);
+	}
+
+	private static void registerPomContent(Map<String, Content> contentMap, MavenArtifact mavenArtefact,
+			String directory) {
+		PomContent pomContent = new PomContent(mavenArtefact);
+		String contentUrl = String.format("%s/%s-%s.pom", directory, mavenArtefact.getArtifactId(),
+				mavenArtefact.getVersion());
+		registerContentAndItsDigests(pomContent, contentUrl, contentMap);
+	}
+
+	private static void registerContentAndItsDigests(Content content, String contentUrl, Map<String, Content> contentMap) {
+		contentMap.put(contentUrl, content);
+		registerDigestForContent(content, contentMap, contentUrl, "MD5");
+		registerDigestForContent(content, contentMap, contentUrl, "SHA1");
+	}
+
+	private static String registerDigestForContent(Content content, Map<String, Content> contentMap,
+			String originalUrl, String macType) {
 
 		DigestContent digestContent = new DigestContent(macType, content);
 		String digestUrl = String.format("%s.%s", originalUrl, macType.toLowerCase());
-		server.registerContent(digestUrl, digestContent);
+		contentMap.put(digestUrl, digestContent);
 
 		return digestUrl;
 	}

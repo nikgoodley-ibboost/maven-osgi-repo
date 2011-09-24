@@ -30,42 +30,49 @@ public class OsgiToMavenMapper {
 
 			Version version = plugin.getVersion();
 
-			MavenArtifactBuilder artefactBuilder = builder.addArtifact();
+			boolean isSourcePlugin = plugin.getName().endsWith("source");
+
+			MavenArtifactBuilder artefactBuilder = isSourcePlugin ? builder.addSourceArtifact() : builder.addArtifact();
+
 			artefactBuilder.setGroup(groupId);
 			artefactBuilder.setArtifactId(artifactId);
 			artefactBuilder.setVersion(createMavenVersion(version));
 			artefactBuilder.setContent(plugin.getLocation());
 
-			for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
-
-				OsgiPlugin osgiPlugin = repository.resolveDependency(osgiDependency);
-
-				if (osgiPlugin == null) {
-					log.warn("Could not resolve dependency %s.", osgiDependency);
-					// throw new
-					// RuntimeException(String.format("Could not resolve dependency %s.",
-					// osgiDependency));
-				} else {
-
-					MavenDependencyBuilder dependencyBuilder = artefactBuilder.addDependency();
-					dependencyBuilder.setArtefactId(createArtifactName(osgiPlugin.getName()));
-					dependencyBuilder.setGroupId(createGroupId(osgiPlugin.getName()));
-
-					// VersionRange versionRange =
-					// osgiDependency.getVersionRange();
-
-					dependencyBuilder.setVersionRange(createMavenVersion(osgiPlugin.getVersion()), true,
-							createMavenVersion(osgiPlugin.getVersion()), true);
-					dependencyBuilder.build();
-				}
-			}
-
-			artefactBuilder.build();
+			addDependencies(repository, plugin, artefactBuilder);
 
 		}
 
 		return builder.build();
 
+	}
+
+	private static void addDependencies(OsgiRepository repository, OsgiPlugin plugin, MavenArtifactBuilder artefactBuilder) {
+		for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
+
+			OsgiPlugin osgiPlugin = repository.resolveDependency(osgiDependency);
+
+			if (osgiPlugin == null) {
+				log.warn("Could not resolve dependency %s.", osgiDependency);
+				// throw new
+				// RuntimeException(String.format("Could not resolve dependency %s.",
+				// osgiDependency));
+			} else {
+
+				MavenDependencyBuilder dependencyBuilder = artefactBuilder.addDependency();
+				dependencyBuilder.setArtefactId(createArtifactName(osgiPlugin.getName()));
+				dependencyBuilder.setGroupId(createGroupId(osgiPlugin.getName()));
+
+				// VersionRange versionRange =
+				// osgiDependency.getVersionRange();
+
+				dependencyBuilder.setVersionRange(createMavenVersion(osgiPlugin.getVersion()), true,
+						createMavenVersion(osgiPlugin.getVersion()), true);
+				dependencyBuilder.build();
+			}
+		}
+
+		artefactBuilder.build();
 	}
 
 	static MavenVersion createMavenVersion(Version version) {
@@ -76,22 +83,18 @@ public class OsgiToMavenMapper {
 	}
 
 	static String createGroupId(String pluginName) {
-		// String pluginName = plugin.getName();
-
-		List<String> parts1 = Arrays.asList(pluginName.split("\\."));
-		List<String> parts = parts1;
-
-		String groupId = StringUtils.join(parts.subList(0, parts.size() - 1), '.');
-		return groupId;
+		List<String> parts = Arrays.asList(pluginName.split("\\."));
+		return StringUtils.join(parts.subList(0, parts.size() - (isSourcePlugin(parts) ? 2 : 1)), '.');
 	}
 
 	static String createArtifactName(String pluginName) {
-		// String pluginName = plugin.getName();
-
 		List<String> parts = Arrays.asList(pluginName.split("\\."));
-		List<String> groupParts = parts;
+		return isSourcePlugin(parts) ? parts.get(parts.size() - 2) : parts.get(parts.size() - 1);
+	}
 
-		return groupParts.get(groupParts.size() - 1);
+	private static boolean isSourcePlugin(List<String> parts) {
+		boolean isSourcePlugin = parts.get(parts.size() - 1).equals("source");
+		return isSourcePlugin;
 	}
 
 }
