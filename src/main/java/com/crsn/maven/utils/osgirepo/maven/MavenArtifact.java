@@ -12,10 +12,13 @@ public class MavenArtifact {
 	private final MavenVersion version;
 	private final File content;
 	private final List<MavenDependency> dependencies;
+	private final String name;
+	private final String organization;
 
 	public MavenArtifact(String groupId, String artifactId, MavenVersion version, List<MavenDependency> dependencies,
-			File content) {
+			File content, String name, String organization) {
 
+	
 		if (groupId == null) {
 			throw new NullPointerException("Null groupId.");
 		}
@@ -40,6 +43,16 @@ public class MavenArtifact {
 		}
 		this.content = content;
 
+		if (name == null) {
+			throw new NullPointerException("Null name.");
+		}
+		this.organization = organization;
+		
+		if (organization == null) {
+			throw new NullPointerException("Null organization.");
+		}
+		this.name = name;
+
 	}
 
 	public String getGroupId() {
@@ -62,6 +75,14 @@ public class MavenArtifact {
 		return Collections.unmodifiableList(dependencies);
 	}
 
+	public String getName() {
+		return name;
+	}
+	
+	public String getOrganization() {
+		return organization;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("%s:%s:%s",groupId,artifactId,version);

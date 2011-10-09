@@ -52,78 +52,53 @@ public class MavenRepositoryBuilder {
 		protected MavenVersion version;
 		private List<MavenDependency> dependencies = new LinkedList<MavenDependency>();
 		protected File content;
+		protected String name = "";
+		protected String organization = "";
 
 		public MavenArtifactBuilderInternal() {
 
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#setGroup(java
-		 * .lang.String)
-		 */
 		@Override
 		public void setGroup(String groupId) {
 			this.group = groupId;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#setArtefactId
-		 * (java.lang.String)
-		 */
 		@Override
 		public void setArtifactId(String artifactId) {
 			this.artifactId = artifactId;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#setVersion(com
-		 * .crsn.maven.utils.osgirepo.maven.MavenVersion)
-		 */
 		@Override
 		public void setVersion(MavenVersion version) {
 			this.version = version;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#addDependency()
-		 */
 		@Override
 		public MavenDependencyBuilder addDependency() {
 			return new InternalDependencyBuilder();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#setContent(java
-		 * .io.File)
-		 */
 		@Override
 		public void setContent(File content) {
 			this.content = content;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.crsn.maven.utils.osgirepo.maven.builder.MavenAer#build()
-		 */
+		@Override
+		public void setName(String name) {
+			this.name = name;
+
+		}
+
+		@Override
+		public void setOrganization(String organization) {
+			this.organization = organization;
+
+		}
+
 		@Override
 		public void build() {
-			artefacts.add(new MavenArtifact(group, artifactId, version, dependencies, content));
+			artefacts.add(new MavenArtifact(group, artifactId, version, dependencies, content, name, organization));
 		}
 
 		private class InternalDependencyBuilder implements MavenDependencyBuilder {

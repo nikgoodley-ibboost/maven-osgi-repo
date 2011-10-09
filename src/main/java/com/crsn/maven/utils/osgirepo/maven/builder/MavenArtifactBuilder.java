@@ -17,6 +17,10 @@ public interface MavenArtifactBuilder {
 
 	void setContent(File content);
 
+	void setName(String name);
+
+	void setOrganization(String organization);
+
 	void build();
 
 }
