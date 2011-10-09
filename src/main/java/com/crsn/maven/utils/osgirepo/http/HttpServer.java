@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.simpleframework.http.Path;
@@ -18,8 +20,11 @@ import org.simpleframework.transport.connect.SocketConnection;
 
 import com.crsn.maven.utils.osgirepo.http.cor.FilterChain;
 import com.crsn.maven.utils.osgirepo.http.filter.ContentFilter;
+import com.crsn.maven.utils.osgirepo.http.filter.ControllerFilter;
 import com.crsn.maven.utils.osgirepo.http.filter.NotFoundFilter;
 import com.crsn.maven.utils.osgirepo.http.filter.ServerVersionFilter;
+import com.crsn.maven.utils.osgirepo.http.handler.RequestHandler;
+import com.crsn.maven.utils.osgirepo.http.handler.SearchHandler;
 import com.google.code.mjl.Log;
 import com.google.code.mjl.LogFactory;
 
@@ -42,8 +47,13 @@ public class HttpServer implements Container {
 	private InetSocketAddress listeningOn;
 
 	private final ContentFilter contentFilter = new ContentFilter();
+	private final Map<String, RequestHandler> handlers = new HashMap<String, RequestHandler>();
+	{
+		handlers.put("search", new SearchHandler());
+	}
 
-	private final FilterChain chain = new FilterChain(new ServerVersionFilter(), contentFilter, new NotFoundFilter());
+	private final FilterChain chain = new FilterChain(new ServerVersionFilter(), contentFilter, new ControllerFilter(
+			handlers), new NotFoundFilter());
 
 	public HttpServer() {
 		this.port = 0;
