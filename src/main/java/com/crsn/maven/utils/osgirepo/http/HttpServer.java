@@ -16,6 +16,10 @@ import org.simpleframework.http.core.Container;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+import com.crsn.maven.utils.osgirepo.http.cor.FilterChain;
+import com.crsn.maven.utils.osgirepo.http.filter.ContentFilter;
+import com.crsn.maven.utils.osgirepo.http.filter.NotFoundFilter;
+import com.crsn.maven.utils.osgirepo.http.filter.ServerVersionFilter;
 import com.google.code.mjl.Log;
 import com.google.code.mjl.LogFactory;
 
@@ -36,6 +40,10 @@ public class HttpServer implements Container {
 	private Connection connection;
 
 	private InetSocketAddress listeningOn;
+
+	private final ContentFilter contentFilter = new ContentFilter();
+
+	private final FilterChain chain = new FilterChain(new ServerVersionFilter(), contentFilter, new NotFoundFilter());
 
 	public HttpServer() {
 		this.port = 0;
@@ -90,15 +98,7 @@ public class HttpServer implements Container {
 	}
 
 	public void registerContent(String path, Content content) {
-		if (path == null) {
-			throw new NullPointerException("Null path.");
-		}
-		if (content == null) {
-			throw new NullPointerException("Null content.");
-		}
-
-		log.info("Registered %s", path);
-		contents.put(path, content);
+		contentFilter.registerContent(path, content);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -111,33 +111,9 @@ public class HttpServer implements Container {
 
 	@Override
 	public void handle(Request req, Response res) {
-		Path path = req.getPath();
 
 		try {
-			Content content = contents.get(path.toString());
-			if (content != null) {
-				res.set("Content-Type", content.contentType());
-				res.set("Server", "HelloWorld/1.0 (Simple 4.0)");
-				res.setDate("Date", System.currentTimeMillis());
-				res.setDate("Last-Modified", System.currentTimeMillis());
-				OutputStream outputStream = res.getOutputStream();
-				content.serializeContent(outputStream);
-				outputStream.close();
-				log.info("path: %s", path.getPath());
-			} else {
-				log.warn("failed request: %s", path.getPath());
-
-				res.setCode(404);
-				res.set("Content-Type", "text/plain");
-				res.set("Server", "HelloWorld/1.0 (Simple 4.0)");
-				res.setDate("Date", System.currentTimeMillis());
-				res.setDate("Last-Modified", System.currentTimeMillis());
-
-				PrintStream ps = res.getPrintStream();
-				ps.println("Hello world!");
-				ps.close();
-
-			}
+			chain.process(req, res);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

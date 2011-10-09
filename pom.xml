@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
-	
+
+
 	<groupId>com.crsn.maven.utils</groupId>
 	<artifactId>osgi-repo</artifactId>
 	<version>0.2</version>
@@ -86,6 +86,17 @@
 			<groupId>com.google.code.mjl</groupId>
 			<artifactId>mjl</artifactId>
 			<version>0.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-demo</artifactId>
+			<version>3.4.0</version>
 		</dependency>
 
 
