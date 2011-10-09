@@ -12,7 +12,7 @@ import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtifactBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
-import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
+import com.crsn.maven.utils.osgirepo.osgi.OsgiBundle;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 import com.crsn.maven.utils.osgirepo.osgi.VersionRange;
 import com.google.code.mjl.Log;
@@ -23,7 +23,7 @@ public class OsgiToMavenMapper {
 
 	public static MavenRepository createRepository(OsgiRepository repository) {
 		MavenRepositoryBuilder builder = new MavenRepositoryBuilder();
-		for (OsgiPlugin plugin : repository.getPlugins()) {
+		for (OsgiBundle plugin : repository.getPlugins()) {
 			String groupId = createGroupId(plugin.getName());
 
 			String artifactId = createArtifactName(plugin.getName());
@@ -47,10 +47,10 @@ public class OsgiToMavenMapper {
 
 	}
 
-	private static void addDependencies(OsgiRepository repository, OsgiPlugin plugin, MavenArtifactBuilder artefactBuilder) {
+	private static void addDependencies(OsgiRepository repository, OsgiBundle plugin, MavenArtifactBuilder artefactBuilder) {
 		for (OsgiDependency osgiDependency : plugin.getRequiredBundles()) {
 
-			OsgiPlugin osgiPlugin = repository.resolveDependency(osgiDependency);
+			OsgiBundle osgiPlugin = repository.resolveDependency(osgiDependency);
 
 			if (osgiPlugin == null) {
 				log.warn("Could not resolve dependency %s.", osgiDependency);

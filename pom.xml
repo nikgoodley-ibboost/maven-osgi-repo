@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.crsn.maven.utils</groupId>
 	<artifactId>osgi-repo</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2</version>
 
 
 	<dependencies>
@@ -30,6 +30,14 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.0.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

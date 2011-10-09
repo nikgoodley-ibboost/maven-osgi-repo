@@ -8,6 +8,7 @@ import java.util.Set;
 import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.http.HttpServer;
 import com.crsn.maven.utils.osgirepo.http.content.EmptyContent;
+import com.crsn.maven.utils.osgirepo.http.content.VelocityHtmlTemplateContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
 import com.crsn.maven.utils.osgirepo.util.MavenRepositoryToHttpContentsMapper;
@@ -26,7 +27,10 @@ public class MavenOsgiRepository {
 			server.registerContent(entry.getKey(), entry.getValue());
 		}
 		
-		server.registerContent("/", new EmptyContent());
+		
+		server.registerContent("/", new VelocityHtmlTemplateContent("/index.vm",mavenRepository));
+		
+//		server.registerContent("/", new EmptyContent());
 
 	}
 

@@ -1,6 +1,5 @@
 package com.crsn.maven.utils.osgirepo.osgi;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -14,30 +13,41 @@ import org.osgi.framework.Version;
 
 public class BundleParser {
 
-	private final String pluginName;
-	private final Version pluginVersion;
+	private static final String BUNDLE_CLASS_PATH = "Bundle-ClassPath";
+	private static final String REQUIRE_BUNDLE = "Require-Bundle";
+	private static final String BUNDLE_VERSION = "Bundle-Version";
+	private static final String BUNDLE_SYMBOLIC_NAME = "Bundle-SymbolicName";
+	private final String bundleName;
+	private final Version bundleVersion;
 
 	private final LinkedList<OsgiDependency> requiredBundles;
 	private final List<String> classPathEntries = new LinkedList<String>();
 
-	public BundleParser(InputStream content) {
+	private BundleParser(InputStream content) throws CouldNotParseBundleDescriptorException {
 		try {
 
 			HashMap<String, String> headers = new HashMap<String, String>();
 			ManifestElement.parseBundleManifest(content, headers);
 
-			ManifestElement[] elements = ManifestElement.parseHeader("Bundle-SymbolicName",
-					headers.get("Bundle-SymbolicName"));
+			String unparsedSymbolicName = headers.get(BUNDLE_SYMBOLIC_NAME);
+
+			if (unparsedSymbolicName == null) {
+				throw new CouldNotParseBundleDescriptorException(String.format("Could not parse bundle, header %s is missing",
+						BUNDLE_SYMBOLIC_NAME));
+			}
+
+			ManifestElement[] elements = ManifestElement.parseHeader(BUNDLE_SYMBOLIC_NAME, unparsedSymbolicName);
+
 			if (elements.length != 1) {
 				throw new IllegalArgumentException("more than one symbolic name");
 			}
-			this.pluginName = elements[0].getValue();
-			this.pluginVersion = new Version(headers.get("Bundle-Version"));
+			this.bundleName = elements[0].getValue();
+			this.bundleVersion = new Version(headers.get(BUNDLE_VERSION));
 
 			this.requiredBundles = new LinkedList<OsgiDependency>();
 
-			ManifestElement[] requireElements = ManifestElement.parseHeader("Require-Bundle",
-					headers.get("Require-Bundle"));
+			ManifestElement[] requireElements = ManifestElement.parseHeader(REQUIRE_BUNDLE,
+					headers.get(REQUIRE_BUNDLE));
 
 			if (requireElements != null) {
 				for (ManifestElement manifestElement : requireElements) {
@@ -49,7 +59,7 @@ public class BundleParser {
 				}
 			}
 
-			String bundleClassPath = headers.get("Bundle-ClassPath");
+			String bundleClassPath = headers.get(BUNDLE_CLASS_PATH);
 			if (bundleClassPath != null) {
 				for (String entry : bundleClassPath.split(",")) {
 					classPathEntries.add(entry.trim());
@@ -63,12 +73,12 @@ public class BundleParser {
 		}
 	}
 
-	public String getPluginName() {
-		return pluginName;
+	public String getBundleName() {
+		return bundleName;
 	}
 
-	public Version getPluginVersion() {
-		return pluginVersion;
+	public Version getBundleVersion() {
+		return bundleVersion;
 	}
 
 	public List<OsgiDependency> getRequiredBundles() {
@@ -77,6 +87,10 @@ public class BundleParser {
 
 	public List<String> getClassPathEntries() {
 		return Collections.unmodifiableList(classPathEntries);
+	}
+
+	public static BundleParser parse(InputStream content, String absolutePath) throws CouldNotParseBundleDescriptorException {
+		return new BundleParser(content);
 	}
 
 }

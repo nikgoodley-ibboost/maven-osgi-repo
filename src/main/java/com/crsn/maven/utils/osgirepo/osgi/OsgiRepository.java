@@ -14,15 +14,15 @@ public class OsgiRepository {
 
 	private static Log log = LogFactory.getLog();
 
-	private List<OsgiPlugin> plugins;
+	private List<OsgiBundle> bundles;
 
-	private OsgiRepository(List<OsgiPlugin> plugins) {
-		this.plugins = plugins;
+	private OsgiRepository(List<OsgiBundle> bundles) {
+		this.bundles = bundles;
 	}
 
 	public static OsgiRepository createRepository(File directory) {
 
-		LinkedList<OsgiPlugin> plugins = new LinkedList<OsgiPlugin>();
+		LinkedList<OsgiBundle> bundles = new LinkedList<OsgiBundle>();
 
 		if (directory == null) {
 			throw new NullPointerException("Null directory.");
@@ -31,44 +31,57 @@ public class OsgiRepository {
 		File[] listFiles = directory.listFiles();
 
 		for (File file : listFiles) {
-			if (file.isFile() && file.getName().toLowerCase().endsWith("jar")) {
-				JarOsgiPlugin osgiPlugin = new JarOsgiPlugin(file);
-				log.info("added plugin %s/%s", osgiPlugin.getName(), osgiPlugin.getVersion());
-				plugins.add(osgiPlugin);
-
-			} else if (file.isDirectory()) {
-				DirectoryOsgiPlugin osgiPlugin = new DirectoryOsgiPlugin(file);
-				log.info("added plugin %s/%s", osgiPlugin.getName(), osgiPlugin.getVersion());
-				plugins.add(osgiPlugin);
-			}
+			addBundleToRepository(bundles, file);
 		}
 
-		return new OsgiRepository(plugins);
+		return new OsgiRepository(bundles);
 
 	}
 
-	public static OsgiRepository createRepository(List<? extends OsgiPlugin> plugins) {
-		return new OsgiRepository(new LinkedList<OsgiPlugin>(plugins));
+	private static void addBundleToRepository(LinkedList<OsgiBundle> bundles, File file) {
+		try {
+			boolean isJarBundle = file.isFile() && file.getName().toLowerCase().endsWith("jar");
+			if (isJarBundle) {
+				JarOsgiBundle osgiBundle = JarOsgiBundle.createBundle(file);
+				addBundle(bundles, osgiBundle);
+
+			} else if (file.isDirectory()) {
+				DirectoryOsgiBundle osgiBundle;
+				osgiBundle = DirectoryOsgiBundle.createBundle(file);
+				addBundle(bundles, osgiBundle);
+			}
+		} catch (IsNotBundleException e) {
+			log.warn(e, "Could not create bundle.");
+		}
 	}
 
-	public List<OsgiPlugin> getPlugins() {
-		return Collections.unmodifiableList(plugins);
+	private static void addBundle(LinkedList<OsgiBundle> plugins, OsgiBundle osgiPlugin) {
+		log.info("added plugin %s/%s", osgiPlugin.getName(), osgiPlugin.getVersion());
+		plugins.add(osgiPlugin);
 	}
 
-	public OsgiPlugin resolveDependency(OsgiDependency dependency) {
+	public static OsgiRepository createRepository(List<? extends OsgiBundle> plugins) {
+		return new OsgiRepository(new LinkedList<OsgiBundle>(plugins));
+	}
+
+	public List<OsgiBundle> getPlugins() {
+		return Collections.unmodifiableList(bundles);
+	}
+
+	public OsgiBundle resolveDependency(OsgiDependency dependency) {
 
 		if (dependency == null) {
 			throw new NullPointerException("Null dependency.");
 		}
 
-		TreeSet<OsgiPlugin> resolved = new TreeSet<OsgiPlugin>(new Comparator<OsgiPlugin>() {
+		TreeSet<OsgiBundle> resolved = new TreeSet<OsgiBundle>(new Comparator<OsgiBundle>() {
 			@Override
-			public int compare(OsgiPlugin o1, OsgiPlugin o2) {
+			public int compare(OsgiBundle o1, OsgiBundle o2) {
 				return o1.getVersion().compareTo(o2.getVersion());
 			}
 		});
 
-		for (OsgiPlugin osgiPlugin : this.plugins) {
+		for (OsgiBundle osgiPlugin : this.bundles) {
 			if (dependency.isResolvedBy(osgiPlugin)) {
 				resolved.add(osgiPlugin);
 			}

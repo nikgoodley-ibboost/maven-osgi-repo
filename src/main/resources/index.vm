@@ -1,0 +1,10 @@
+<html>
+	<head><title>Maven Osgi Repo ($version)</title></head>
+	<body>
+		<list>
+		#foreach($artifact in $mavenRepo.artifacts)
+			<li>$artifact<br></li>
+		#end
+		</list>
+	</body>
+</html>

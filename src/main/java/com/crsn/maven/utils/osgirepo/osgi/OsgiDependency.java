@@ -26,17 +26,17 @@ public class OsgiDependency {
 		return versionRange;
 	}
 
-	public boolean isResolvedBy(OsgiPlugin osgiPlugin) {
-		if (osgiPlugin == null) {
-			throw new NullPointerException("Null osgi plugin.");
+	public boolean isResolvedBy(OsgiBundle osgiBundle) {
+		if (osgiBundle == null) {
+			throw new NullPointerException("Null osgi bundle.");
 		}
 
-		String pluginName = osgiPlugin.getName();
+		String pluginName = osgiBundle.getName();
 		if (!pluginName.equals(name)) {
 			return false;
 		}
 
-		return versionRange.contains(osgiPlugin.getVersion());
+		return versionRange.contains(osgiBundle.getVersion());
 
 	}
 

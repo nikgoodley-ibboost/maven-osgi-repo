@@ -13,16 +13,16 @@ import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Version;
 
-public class JarOsgiPlugin implements OsgiPlugin {
+public class JarOsgiBundle implements OsgiBundle {
 	
 	private final File location;
 	
 	
-	private final String pluginName;
-	private final Version pluginVersion;
+	private final String bundleName;
+	private final Version bundleVersion;
 	private final List<OsgiDependency> requiredBundles;
 
-	public JarOsgiPlugin(File location) {
+	private JarOsgiBundle(File location) throws IsNotBundleException {
 		if (location == null) {
 			throw new NullPointerException("Null location.");
 		}
@@ -35,11 +35,18 @@ public class JarOsgiPlugin implements OsgiPlugin {
 			
 			InputStream content = zipFile.getInputStream(zipFile.getEntry("META-INF/MANIFEST.MF"));
 			
-			BundleParser parser=new BundleParser(content);
+			BundleParser parser;
+			try {
+				parser = BundleParser.parse(content, location.getAbsolutePath());
+				this.bundleName=parser.getBundleName();
+				this.bundleVersion=parser.getBundleVersion();
+				this.requiredBundles=parser.getRequiredBundles();
+			} catch (CouldNotParseBundleDescriptorException e) {
+				throw new IsNotBundleException(String.format("Directory %s does not contain valid OSGI bundle",
+						location.getAbsolutePath()),e);
+			}
 			
-			this.pluginName=parser.getPluginName();
-			this.pluginVersion=parser.getPluginVersion();
-			this.requiredBundles=parser.getRequiredBundles();
+			
 			
 			
 		} catch (ZipException e) {
@@ -55,7 +62,7 @@ public class JarOsgiPlugin implements OsgiPlugin {
 	 */
 	@Override
 	public String getName() {
-		return pluginName;
+		return bundleName;
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +70,7 @@ public class JarOsgiPlugin implements OsgiPlugin {
 	 */
 	@Override
 	public Version getVersion() {
-		return this.pluginVersion;
+		return this.bundleVersion;
 	}
 	
 	/* (non-Javadoc)
@@ -80,6 +87,10 @@ public class JarOsgiPlugin implements OsgiPlugin {
 	@Override
 	public List<OsgiDependency> getRequiredBundles() {
 		return requiredBundles;
+	}
+
+	public static JarOsgiBundle createBundle(File file) throws IsNotBundleException {
+		return new JarOsgiBundle(file);
 	}
 
 }

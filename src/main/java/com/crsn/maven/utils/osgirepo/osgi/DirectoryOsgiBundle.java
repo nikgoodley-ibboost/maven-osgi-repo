@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,33 +16,25 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.plexus.util.IOUtil;
-import org.eclipse.osgi.util.ManifestElement;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.Version;
 
-public class DirectoryOsgiPlugin implements OsgiPlugin {
+public class DirectoryOsgiBundle implements OsgiBundle {
 
 	private final File location;
 
-	private final String pluginName;
-	private final Version pluginVersion;
+	private final String bundleName;
+	private final Version bundleVersion;
 	private final List<OsgiDependency> requiredBundles;
 
 	private final List<String> contentFileNames;
 
-	public DirectoryOsgiPlugin(File location) {
+	private DirectoryOsgiBundle(File location) throws IsNotBundleException {
 		if (location == null) {
 			throw new NullPointerException("Null location.");
 		}
@@ -57,10 +48,16 @@ public class DirectoryOsgiPlugin implements OsgiPlugin {
 
 			InputStream content = new FileInputStream(new File(location, "META-INF/MANIFEST.MF"));
 
-			BundleParser parser = new BundleParser(content);
+			BundleParser parser;
+			try {
+				parser = BundleParser.parse(content, location.getAbsolutePath());
+			} catch (CouldNotParseBundleDescriptorException e) {
+				throw new IsNotBundleException(String.format("Directory %s does not contain valid OSGI bundle",
+						location.getAbsolutePath()));
+			}
 
-			this.pluginName = parser.getPluginName();
-			this.pluginVersion = parser.getPluginVersion();
+			this.bundleName = parser.getBundleName();
+			this.bundleVersion = parser.getBundleVersion();
 			this.requiredBundles = parser.getRequiredBundles();
 			this.contentFileNames = parser.getClassPathEntries();
 
@@ -70,6 +67,10 @@ public class DirectoryOsgiPlugin implements OsgiPlugin {
 
 	}
 
+	public static DirectoryOsgiBundle createBundle(File directory) throws IsNotBundleException {
+		return new DirectoryOsgiBundle(directory);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,7 +78,7 @@ public class DirectoryOsgiPlugin implements OsgiPlugin {
 	 */
 	@Override
 	public String getName() {
-		return pluginName;
+		return bundleName;
 	}
 
 	/*
@@ -87,7 +88,7 @@ public class DirectoryOsgiPlugin implements OsgiPlugin {
 	 */
 	@Override
 	public Version getVersion() {
-		return this.pluginVersion;
+		return this.bundleVersion;
 	}
 
 	/*

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.osgi.framework.Version;
 
-public interface OsgiPlugin {
+public interface OsgiBundle {
 
 	public abstract String getName();
 

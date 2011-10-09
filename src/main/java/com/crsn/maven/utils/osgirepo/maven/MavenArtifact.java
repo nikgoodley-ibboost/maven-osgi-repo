@@ -13,9 +13,9 @@ public class MavenArtifact {
 	private final File content;
 	private final List<MavenDependency> dependencies;
 
-	public MavenArtifact(String groupId, String artifactId, MavenVersion version,
-			List<MavenDependency> dependencies, File content) {
-		
+	public MavenArtifact(String groupId, String artifactId, MavenVersion version, List<MavenDependency> dependencies,
+			File content) {
+
 		if (groupId == null) {
 			throw new NullPointerException("Null groupId.");
 		}
@@ -29,8 +29,7 @@ public class MavenArtifact {
 			throw new NullPointerException("Null version");
 		}
 		this.version = version;
-		
-		
+
 		if (dependencies == null) {
 			throw new NullPointerException("Null dependencies");
 		}
@@ -59,9 +58,12 @@ public class MavenArtifact {
 		return content;
 	}
 
-	 
 	public List<MavenDependency> getDependencies() {
 		return Collections.unmodifiableList(dependencies);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s:%s:%s",groupId,artifactId,version);
+	}
 }

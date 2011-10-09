@@ -1,7 +1,7 @@
 package com.crsn.maven.utils.osgirepo.osgi;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.osgi.framework.Version;
@@ -14,7 +14,7 @@ public class OsgiRepositoryTest {
 	public void canLoadRepository() {
 		OsgiRepository repo = OsgiRepository.createRepository(TestUtil.getFileOfResource("mockrepo"));
 		assertFalse(repo.getPlugins().isEmpty());
-		OsgiPlugin plugin = repo.getPlugins().get(0);
+		OsgiBundle plugin = repo.getPlugins().get(0);
 		assertFalse(plugin.getRequiredBundles().isEmpty());
 	}
 
@@ -22,7 +22,7 @@ public class OsgiRepositoryTest {
 	public void canLoadRepositoryWithDirectoryPlugins() {
 		OsgiRepository repo = OsgiRepository.createRepository(TestUtil.getFileOfResource("mockrepo-2"));
 		assertFalse(repo.getPlugins().isEmpty());
-		OsgiPlugin plugin = repo.getPlugins().get(0);
+		OsgiBundle plugin = repo.getPlugins().get(0);
 		assertFalse(plugin.getRequiredBundles().isEmpty());
 	}
 

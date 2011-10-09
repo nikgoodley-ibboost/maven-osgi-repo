@@ -6,9 +6,9 @@ import java.util.List;
 import org.osgi.framework.Version;
 
 import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
-import com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin;
+import com.crsn.maven.utils.osgirepo.osgi.OsgiBundle;
 
-public class MockOsgiPlugin implements OsgiPlugin {
+public class MockOsgiPlugin implements OsgiBundle {
 
 	private final String name;
 	private final Version version;
