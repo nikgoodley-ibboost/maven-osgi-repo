@@ -3,11 +3,9 @@ package com.crsn.maven.utils.osgirepo;
 import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
 import com.crsn.maven.utils.osgirepo.http.HttpServer;
-import com.crsn.maven.utils.osgirepo.http.content.EmptyContent;
 import com.crsn.maven.utils.osgirepo.http.content.VelocityHtmlTemplateContent;
 import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;

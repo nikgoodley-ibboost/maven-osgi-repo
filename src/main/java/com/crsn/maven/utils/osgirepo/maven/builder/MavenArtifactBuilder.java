@@ -2,7 +2,6 @@ package com.crsn.maven.utils.osgirepo.maven.builder;
 
 import java.io.File;
 
-import com.crsn.maven.utils.osgirepo.maven.MavenArtifact;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 
 public interface MavenArtifactBuilder {

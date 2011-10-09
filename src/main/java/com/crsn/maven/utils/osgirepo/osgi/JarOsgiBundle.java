@@ -3,14 +3,10 @@ package com.crsn.maven.utils.osgirepo.osgi;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.eclipse.osgi.util.ManifestElement;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.Version;
 
 public class JarOsgiBundle implements OsgiBundle {
@@ -57,33 +53,23 @@ public class JarOsgiBundle implements OsgiBundle {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getName()
-	 */
+
 	@Override
 	public String getName() {
 		return bundleName;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getVersion()
-	 */
 	@Override
 	public Version getVersion() {
 		return this.bundleVersion;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getLocation()
-	 */
 	@Override
 	public File getLocation() {
 		return location;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.crsn.maven.utils.osgirepo.osgi.OsgiPlugin#getRequiredBundles()
-	 */
+	
 	@Override
 	public List<OsgiDependency> getRequiredBundles() {
 		return requiredBundles;

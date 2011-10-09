@@ -1,13 +1,7 @@
 package com.crsn.maven.utils.osgirepo;
 
 import java.io.File;
-import java.util.List;
 
-import com.crsn.maven.utils.osgirepo.http.HttpServer;
-import com.crsn.maven.utils.osgirepo.maven.MavenRepository;
-import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
-import com.crsn.maven.utils.osgirepo.util.MavenRepositoryToHttpContentsMapper;
-import com.crsn.maven.utils.osgirepo.util.OsgiToMavenMapper;
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
 

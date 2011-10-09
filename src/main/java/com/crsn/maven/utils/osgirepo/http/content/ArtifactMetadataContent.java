@@ -2,17 +2,14 @@ package com.crsn.maven.utils.osgirepo.http.content;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 
 import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.Versioning;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Writer;
 
 import com.crsn.maven.utils.osgirepo.http.Content;
-
 import com.crsn.maven.utils.osgirepo.maven.MavenArtifactVersions;
 import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 

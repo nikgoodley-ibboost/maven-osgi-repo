@@ -1,7 +1,6 @@
 package com.crsn.maven.utils.osgirepo.maven;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

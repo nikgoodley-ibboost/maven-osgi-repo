@@ -11,10 +11,9 @@ import com.crsn.maven.utils.osgirepo.maven.MavenVersion;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenArtifactBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenDependencyBuilder;
 import com.crsn.maven.utils.osgirepo.maven.builder.MavenRepositoryBuilder;
-import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiBundle;
+import com.crsn.maven.utils.osgirepo.osgi.OsgiDependency;
 import com.crsn.maven.utils.osgirepo.osgi.OsgiRepository;
-import com.crsn.maven.utils.osgirepo.osgi.VersionRange;
 import com.google.code.mjl.Log;
 import com.google.code.mjl.LogFactory;
 
